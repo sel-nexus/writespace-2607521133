@@ -126,11 +126,42 @@ describe('entry protection and session handling', () => {
     },
   );
 
-  it.each(postPaths)('keeps authorized writer path %s at not-found until that slice is implemented', (path) => {
+  it.each([
+    ['/blogs', 'All Blogs'], ['/blog/example', 'Post not found'],
+    ['/write', 'Write a post'], ['/edit/example', 'Post not found'],
+  ])('renders the implemented writer post route %s', (path, heading) => {
     localStorage.setItem('writespace_session', JSON.stringify(writer));
     renderEntry(path);
     expect(screen.getByTestId('location').textContent).toBe(path);
-    expect(screen.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'This page wandered off.' })).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ['/blogs', 'All Blogs'], ['/blog/example', 'Post not found'],
+    ['/write', 'Write a post'], ['/edit/example', 'Post not found'],
+  ])('renders the implemented Admin post route %s', (path, heading) => {
+    localStorage.setItem('writespace_session', JSON.stringify(admin));
+    renderEntry(path);
+    expect(screen.getByTestId('location').textContent).toBe(path);
+    expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+  });
+
+  it.each([writer, admin])('passes the current session into real write/read routes: %j', async (session) => {
+    const user = userEvent.setup();
+    localStorage.setItem('writespace_session', JSON.stringify(session));
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue('routed-post');
+    renderEntry('/write');
+    await user.type(screen.getByLabelText(/^Title/), 'Routed title');
+    await user.type(screen.getByLabelText(/^Content/), 'Routed body');
+    await user.click(screen.getByRole('button', { name: 'Publish post' }));
+    expect(screen.getByTestId('location').textContent).toBe('/blog/routed-post');
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Routed title');
+    expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute('href', '/edit/routed-post');
+    expect(JSON.parse(localStorage.getItem('writespace_posts'))).toEqual([{
+      id: 'routed-post', title: 'Routed title', content: 'Routed body', createdAt: expect.any(String),
+      authorId: session.userId, authorName: session.displayName,
+    }]);
   });
 
   it.each(adminPaths)('redirects writers from Admin-only path %s to blogs', (path) => {
@@ -140,7 +171,7 @@ describe('entry protection and session handling', () => {
     expect(screen.queryByRole('link', { name: 'Users' })).not.toBeInTheDocument();
   });
 
-  it.each([...postPaths, ...adminPaths])('keeps authorized Admin route %s at not-found without a fake feature page', (path) => {
+  it.each(adminPaths)('keeps authorized future Admin route %s at not-found without a fake feature page', (path) => {
     localStorage.setItem('writespace_session', JSON.stringify(admin));
     renderEntry(path);
     expect(screen.getByTestId('location').textContent).toBe(path);

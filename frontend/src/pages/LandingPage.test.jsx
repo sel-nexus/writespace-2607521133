@@ -95,7 +95,7 @@ describe('LandingPage', () => {
     expect(latest().queryByText('Story old')).not.toBeInTheDocument();
     expect(latest().getByText('x'.repeat(120))).toBeVisible();
     expect(latest().queryByText(/DO NOT PREVIEW/)).not.toBeInTheDocument();
-    expect(latest().getByText('Apr 04 2025')).toBeVisible();
+    expect(latest().getByText('Apr 04, 2025')).toBeVisible();
     expect(latest().getByRole('link', { name: 'Story new' })).toHaveAttribute('href', '/blog/new');
     expect(localStorage.getItem('writespace_posts')).toBe(raw);
     expect(setItem).not.toHaveBeenCalled();

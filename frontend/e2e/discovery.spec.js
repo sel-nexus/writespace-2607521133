@@ -81,7 +81,7 @@ test('desktop discovery reloads the newest actual previews without persisting sa
   await expect(latest.getByRole('heading', { level: 3 })).toHaveText([
     'Saved thought 4', 'Saved thought 3', 'Saved thought 2',
   ]);
-  await expect(latest.getByText('May 04 2025')).toBeVisible();
+  await expect(latest.getByText('May 04, 2025')).toBeVisible();
   await expect(latest.getByText('p'.repeat(120), { exact: true })).toBeVisible();
   await expect(latest.getByText(/HIDDEN TAIL/)).toHaveCount(0);
   await expect(page.getByText('Illustrative sample', { exact: true })).toHaveCount(3);

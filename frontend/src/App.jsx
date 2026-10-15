@@ -9,6 +9,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import Home from './pages/Home.jsx';
+import ReadBlog from './pages/ReadBlog.jsx';
+import WriteBlog from './pages/WriteBlog.jsx';
 
 /**
  * Read the session without repairing corrupt or inaccessible storage.
@@ -115,7 +118,12 @@ export default function App() {
     navigate('/');
   }
 
-  const futurePostPaths = ['/blogs', '/blog/:id', '/write', '/edit/:id'];
+  const postRoutes = [
+    ['/blogs', <Home session={session} />],
+    ['/blog/:id', <ReadBlog session={session} />],
+    ['/write', <WriteBlog mode="create" session={session} />],
+    ['/edit/:id', <WriteBlog mode="edit" session={session} />],
+  ];
   const futureAdminPaths = ['/admin', '/users'];
 
   return (
@@ -143,13 +151,13 @@ export default function App() {
         <Route path="/" element={<LandingPage session={session} />} />
         <Route path="/login" element={<LoginPage session={session} onAuthenticated={onAuthenticated} />} />
         <Route path="/register" element={<RegisterPage session={session} onAuthenticated={onAuthenticated} />} />
-        {futurePostPaths.map((path) => (
+        {postRoutes.map(([path, page]) => (
           <Route
             key={path}
             path={path}
             element={(
               <ProtectedRoute session={session}>
-                <NotFoundEntry />
+                {page}
               </ProtectedRoute>
             )}
           />

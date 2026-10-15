@@ -37,14 +37,14 @@ function dateValue(value) {
 /**
  * Format valid preview dates consistently regardless of browser timezone.
  * @param {string} value - Persisted creation date.
- * @returns {string} MMM DD YYYY, or explicit unavailable-date feedback.
+ * @returns {string} MMM DD, YYYY, or explicit unavailable-date feedback.
  */
 function previewDate(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'Date unavailable';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC',
-  }).format(date).replace(',', '');
+  }).format(date);
 }
 
 /**
