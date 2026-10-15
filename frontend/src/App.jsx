@@ -1,130 +1,168 @@
-/** Present the public WriteSpace entry without reading or changing browser data. */
-import PropTypes from 'prop-types';
-import { Link, Route, Routes } from 'react-router-dom';
+/** Compose discovery routes and keep local session transitions explicit. */
+import { useEffect, useState } from 'react';
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { clearSession, getSession } from './helpers/auth.js';
+import { isValidSession } from './helpers/storage.js';
+import PublicNavbar from './components/PublicNavbar.jsx';
+import Navbar from './components/Navbar.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 
 /**
- * Frame public content with a home link and an accessible main landmark.
- * @param {object} props - Layout inputs.
- * @param {React.ReactNode} props.children - Public route content.
- * @returns {React.JSX.Element} The shared entry frame.
+ * Read the session without repairing corrupt or inaccessible storage.
+ * @returns {{session:object|null, warning:string}} Identity and safe diagnostic.
  */
-function EntryLayout({ children }) {
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans text-stone-900">
-      <a
-        href="#main-content"
-        className="sr-only rounded-lg bg-white p-3 focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:ring-2 focus:ring-indigo-700"
-      >
-        Skip to content
-      </a>
-      <header className="mx-auto flex max-w-6xl items-center justify-between border-b border-stone-300 px-6 py-6 sm:px-10">
-        <Link
-          to="/"
-          aria-label="WriteSpace home"
-          className="rounded-sm font-serif text-2xl font-bold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-700 focus-visible:ring-offset-4"
-        >
-          WriteSpace<span className="text-indigo-700">.</span>
-        </Link>
-        <p className="text-sm text-stone-600">A space for your words</p>
-      </header>
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-6 py-16 sm:px-10 sm:py-24">
-        {children}
-      </main>
-      <footer className="mx-auto max-w-6xl border-t border-stone-300 px-6 py-8 text-sm text-stone-600 sm:px-10">
-        Thoughtful words. Fresh perspectives. Your WriteSpace.
-      </footer>
-    </div>
-  );
-}
-
-EntryLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-/**
- * Welcome visitors with real introductory content and working in-page navigation.
- * @returns {React.JSX.Element} The public welcome page.
- */
-function WelcomeEntry() {
-  return (
-    <EntryLayout>
-      <section aria-labelledby="welcome-title" className="max-w-3xl">
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">
-          Welcome to WriteSpace
-        </p>
-        <h1 id="welcome-title" className="font-serif text-5xl leading-tight tracking-tight sm:text-7xl">
-          A little space for big ideas.
-        </h1>
-        <p className="mt-8 max-w-xl text-lg leading-relaxed text-stone-700">
-          A passing thought, a story worth telling, a perspective that stays with you.
-          WriteSpace is a home for words that deserve a little room.
-        </p>
-        <a
-          href="#about"
-          className="mt-10 inline-flex min-h-12 items-center rounded-full bg-indigo-700 px-6 py-3 font-medium text-white hover:bg-indigo-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-700 focus-visible:ring-offset-4"
-        >
-          Meet WriteSpace
-        </a>
-      </section>
-      <section
-        id="about"
-        aria-labelledby="about-title"
-        className="mt-20 grid gap-6 border-t border-stone-300 pt-10 sm:mt-28 sm:grid-cols-[1fr_2fr] sm:gap-12"
-      >
-        <h2 id="about-title" className="font-serif text-3xl">Words begin here.</h2>
-        <div className="max-w-xl space-y-5 text-base leading-relaxed text-stone-700">
-          <p>
-            WriteSpace brings reading and writing together: a place to discover fresh
-            voices, shape your own stories, and return to ideas that matter.
-          </p>
-          <p>
-            This is a browser-local writing demo, not a publishing service or a secure
-            account system. This welcome page does not create accounts or save posts.
-          </p>
-          <a
-            href="#main-content"
-            className="inline-flex min-h-11 items-center rounded-sm font-medium text-indigo-700 underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-700 focus-visible:ring-offset-4"
-          >
-            Back to welcome
-          </a>
-        </div>
-      </section>
-    </EntryLayout>
-  );
+function readIdentity() {
+  let warning = '';
+  const session = getSession(() => {
+    warning = 'Could not read your saved session. You are browsing as a guest; stored data has not been changed.';
+  });
+  return { session, warning };
 }
 
 /**
- * Recover unknown URLs without assuming an account or a stored session.
- * @returns {React.JSX.Element} A usable not-found page with a home destination.
+ * Recover unknown and not-yet-implemented routes with a public home link.
+ * @returns {React.JSX.Element} Usable not-found content, never a fake feature page.
  */
 function NotFoundEntry() {
   return (
-    <EntryLayout>
-      <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">Page not found</p>
-      <h1 className="max-w-2xl font-serif text-5xl leading-tight sm:text-6xl">This page wandered off.</h1>
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-5 py-20 sm:px-10">
+      <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-violet-800">
+        Page not found
+      </p>
+      <h1 className="max-w-2xl font-['Georgia',serif] text-5xl leading-tight sm:text-6xl">
+        This page wandered off.
+      </h1>
       <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-700">
-        We couldn’t find that page. Come back to WriteSpace and start from the welcome page.
+        We couldn’t find that page. Come back to WriteSpace and discover a fresh page.
       </p>
       <Link
         to="/"
-        className="mt-8 inline-flex min-h-12 items-center rounded-full bg-indigo-700 px-6 py-3 font-medium text-white hover:bg-indigo-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-700 focus-visible:ring-offset-4"
+        className={[
+          'mt-8 inline-flex min-h-12 items-center rounded-full bg-violet-800 px-6 py-3 font-medium text-white hover:bg-violet-900',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-700 focus-visible:ring-offset-4',
+        ].join(' ')}
       >
         Return to WriteSpace
       </Link>
-    </EntryLayout>
+    </main>
   );
 }
 
 /**
- * Resolve only the implemented entry route and the unknown-route fallback.
- * @returns {React.JSX.Element} Public route content inside the caller's router.
- * @note The browser router belongs exclusively to main.jsx.
+ * Resolve implemented discovery and guard known future destinations.
+ * @returns {React.JSX.Element} Content inside the caller-owned router.
+ * @note Future auth pages receive session and onAuthenticated(nextSession).
+ * The callback accepts only a valid, already-persisted session; it does not write.
  */
 export default function App() {
+  const [identity, setIdentity] = useState(readIdentity);
+  const [logoutError, setLogoutError] = useState('');
+  const [logoutPending, setLogoutPending] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { session, warning } = identity;
+
+  /**
+   * Adopt only a complete, already-persisted successful authentication result.
+   * @param {object} nextSession - Session returned by successful login/register.
+   * @returns {boolean} Whether the identity was accepted.
+   */
+  function onAuthenticated(nextSession) {
+    if (!isValidSession(nextSession)) return false;
+    setIdentity({ session: nextSession, warning: '' });
+    setLogoutError('');
+    return true;
+  }
+
+  useEffect(() => {
+    /** Refresh identity only when another tab changes this demo's session key. */
+    function refreshSession(event) {
+      if (event.key !== 'writespace_session' && event.key !== null) return;
+      const nextIdentity = readIdentity();
+      if (isValidSession(nextIdentity.session)) {
+        onAuthenticated(nextIdentity.session);
+      } else {
+        setIdentity(nextIdentity);
+      }
+    }
+    window.addEventListener('storage', refreshSession);
+    return () => window.removeEventListener('storage', refreshSession);
+  }, []);
+
+  useEffect(() => {
+    if (!logoutPending || location.pathname !== '/') return;
+    // Commit home navigation before clearing identity so concurrent routing cannot
+    // briefly render the old protected route as a guest and redirect to login.
+    setIdentity({ session: null, warning: '' });
+    setLogoutError('');
+    setLogoutPending(false);
+  }, [logoutPending, location.pathname]);
+
+  /**
+   * Remove the durable session before navigating home and clearing UI identity.
+   * @returns {void} Keep identity intact and report a failure when removal fails.
+   */
+  function onLogout() {
+    const result = clearSession();
+    if (!result.ok) {
+      setLogoutError('Could not log out. Your session is still active. Please try again.');
+      return;
+    }
+    setLogoutPending(true);
+    navigate('/');
+  }
+
+  const futurePostPaths = ['/blogs', '/blog/:id', '/write', '/edit/:id'];
+  const futureAdminPaths = ['/admin', '/users'];
+
   return (
-    <Routes>
-      <Route path="/" element={<WelcomeEntry />} />
-      <Route path="*" element={<NotFoundEntry />} />
-    </Routes>
+    <div className="flex min-h-screen flex-col bg-stone-50 font-['Arial',sans-serif] text-stone-900">
+      <a
+        href="#main-content"
+        className={[
+          'sr-only rounded-lg bg-white p-3 focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50',
+          'focus:ring-2 focus:ring-violet-700',
+        ].join(' ')}
+      >
+        Skip to content
+      </a>
+      {location.pathname === '/' || !isValidSession(session) ? (
+        <PublicNavbar session={session} />
+      ) : (
+        <Navbar session={session} onLogout={onLogout} logoutError={logoutError} />
+      )}
+      {warning && (
+        <p role="alert" className="mx-auto mt-4 w-full max-w-7xl rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
+          {warning}
+        </p>
+      )}
+      <Routes>
+        <Route path="/" element={<LandingPage session={session} />} />
+        {futurePostPaths.map((path) => (
+          <Route
+            key={path}
+            path={path}
+            element={(
+              <ProtectedRoute session={session}>
+                <NotFoundEntry />
+              </ProtectedRoute>
+            )}
+          />
+        ))}
+        {futureAdminPaths.map((path) => (
+          <Route
+            key={path}
+            path={path}
+            element={(
+              <ProtectedRoute session={session} role="admin">
+                <NotFoundEntry />
+              </ProtectedRoute>
+            )}
+          />
+        ))}
+        <Route path="*" element={<NotFoundEntry />} />
+      </Routes>
+    </div>
   );
 }

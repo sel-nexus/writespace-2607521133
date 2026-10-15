@@ -52,6 +52,9 @@ for (const corruption of corruptions) {
     await expect(page.getByRole('main')).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
     await expect(page).toHaveTitle('WriteSpace — A space for your words');
+    await expect(page.getByRole('heading', { name: 'Your thoughts. Your space. Beautifully simple.' })).toBeVisible();
+    await expect(page.getByRole('alert').filter({ hasText: 'Could not read saved posts.' })).toBeVisible();
+    await expect(page.getByText('No posts yet — check back soon!')).toBeVisible();
     expect(await readBrowserData(page)).toEqual(corrupted);
 
     // Use a real public home control rather than a second direct navigation.
