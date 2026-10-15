@@ -51,9 +51,9 @@ export default function AuthLayout({ title, description, children }) {
             Illustrative samples, not saved posts. Your writing stays in this browser.
           </p>
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {['Finding your voice', 'Notes from the everyday', 'A little room to write'].map((title, index) => (
+            {[0, 1, 2].map((index) => (
               <article
-                key={title}
+                key={index}
                 className={[
                   'rounded-xl border border-stone-300 bg-white p-5',
                   index === 0 ? 'border-t-4 border-t-violet-700 sm:col-span-2' : '',
@@ -63,13 +63,13 @@ export default function AuthLayout({ title, description, children }) {
                   Illustrative sample
                 </p>
                 <h3 className="mt-3 font-['Georgia',serif] text-xl">
-                  {title}
+                  Post Title
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                  A thought, a sentence, a new beginning.
+                  Full post text...
                 </p>
                 <p className="mt-5 text-xs font-medium text-stone-700">
-                  Admin · Sample author
+                  Admin
                 </p>
               </article>
             ))}

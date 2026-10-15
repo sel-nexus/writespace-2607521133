@@ -152,6 +152,80 @@ describe('login', () => {
 });
 
 describe('registration', () => {
+  // Repeatable stress fixtures, not maximum field lengths or a product account limit.
+  const longInput = {
+    displayName: ` ${'Long Writer 名 '.repeat(1024)} `,
+    username: ` ${'Long-Username_'.repeat(1024)} `,
+    password: ` ${'Long demo password! '.repeat(1024)} `,
+    confirmPassword: ` ${'Long demo password! '.repeat(1024)} `,
+  };
+  const manyUsers = Array.from({ length: 500 }, (_, index) => ({
+    id: `Legacy-ID-${index}`,
+    displayName: ` Writer ${index} 名 `,
+    username: `Existing-Writer-${index}`,
+    password: ` demo password ${index} `,
+    role: index % 2 === 0 ? 'user' : 'admin',
+    createdAt: timestamp,
+  }));
+
+  it('accepts long required fields without truncation or normalization and supports exact login', () => {
+    saveUsers([user]);
+    const original = { ...longInput };
+    const expectedSession = { userId: uuid, displayName: longInput.displayName, username: longInput.username, role: 'user' };
+    const created = { id: uuid, displayName: longInput.displayName, username: longInput.username, password: longInput.password, role: 'user', createdAt: timestamp };
+    expect(register(original)).toEqual({ ok: true, session: expectedSession });
+    expect(getUsers()).toEqual([user, created]);
+    expect(getSession()).toEqual(expectedSession);
+    expect(original).toEqual(longInput);
+    expect(crypto.randomUUID).toHaveBeenCalledTimes(1);
+    expect(clearSession()).toEqual({ ok: true });
+    expect(login(longInput.username, longInput.password)).toEqual({ ok: true, session: expectedSession });
+    expect(getSession()).toEqual(expectedSession);
+    expect(getUsers()).toEqual([user, created]);
+  });
+
+  it('appends exactly one account after 500 existing users while preserving every record and order', () => {
+    expect(saveUsers(manyUsers)).toEqual({ ok: true });
+    expect(savePosts([post])).toEqual({ ok: true });
+    setSession(userSession);
+    const postsBefore = localStorage.getItem('writespace_posts');
+    const writes = vi.spyOn(Storage.prototype, 'setItem');
+    const created = { id: uuid, displayName: input.displayName, username: input.username, password: input.password, role: 'user', createdAt: timestamp };
+    const expectedSession = { userId: uuid, displayName: input.displayName, username: input.username, role: 'user' };
+    expect(register(input)).toEqual({ ok: true, session: expectedSession });
+    expect(getUsers()).toHaveLength(501);
+    expect(getUsers()).toEqual([...manyUsers, created]);
+    expect(localStorage.getItem('writespace_users')).toBe(JSON.stringify([...manyUsers, created]));
+    expect(getSession()).toEqual(expectedSession);
+    expect(localStorage.getItem('writespace_posts')).toBe(postsBefore);
+    expect(writes.mock.calls.map(([key]) => key)).toEqual(['writespace_users', 'writespace_session']);
+    expect(crypto.randomUUID).toHaveBeenCalledTimes(1);
+  });
+
+  it('preserves all 500 users, posts and the previous session when a long registration exceeds storage quota', () => {
+    expect(saveUsers(manyUsers)).toEqual({ ok: true });
+    expect(savePosts([post])).toEqual({ ok: true });
+    expect(setSession(userSession)).toEqual({ ok: true });
+    const before = { ...localStorage };
+    const original = { ...longInput };
+    const writes = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError');
+    });
+    const remove = vi.spyOn(Storage.prototype, 'removeItem');
+    const result = register(original);
+    expect(result).toEqual({ ok: false, code: 'STORAGE_WRITE', accountCreated: false, message: 'Could not save your account. Please try again.' });
+    expect(result).not.toHaveProperty('session');
+    expect(writes.mock.calls.map(([key]) => key)).toEqual(['writespace_users']);
+    expect(remove).not.toHaveBeenCalled();
+    expect({ ...localStorage }).toEqual(before);
+    expect(getUsers()).toHaveLength(500);
+    expect(getUsers()).toEqual(manyUsers);
+    expect(getPosts()).toEqual([post]);
+    expect(getSession()).toEqual(userSession);
+    expect(original).toEqual(longInput);
+    expect(crypto.randomUUID).toHaveBeenCalledTimes(1);
+  });
+
   it('appends one UUID/ISO user-only account then persists its exact session', () => {
     saveUsers([user]); savePosts([post]);
     const original = { ...input, role: 'admin' };

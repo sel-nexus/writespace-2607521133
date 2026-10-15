@@ -146,6 +146,81 @@ afterEach(() => { vi.useRealTimers(); });
   });
 });
 
+/** Build a repeatable stress collection, not a supported-size limit or timing gate. */
+function stressPosts() {
+  return Array.from({ length: 500 }, (_, index) => ({
+    ...original, id: index === 250 ? 'post' : `stress-${index}`,
+    title: `Story ${index}`, content: `Body ${index}\n  Original spacing  `,
+    createdAt: new Date(Date.UTC(2020, 0, index + 1)).toISOString(),
+  }));
+}
+
+const longInput = {
+  title: `  ${'Long title — '.repeat(1024)}  `,
+  content: `\n  ${'Long body with Ω and line breaks\n'.repeat(4096)}  \n`,
+};
+
+ describe('large post inputs and collections', () => {
+  it('accepts long title/body on create and update without trimming or truncating persisted text', () => {
+    expect(validatePostInput(longInput)).toEqual({});
+    const created = createPost(longInput, writer);
+    expect(created).toEqual({ ok: true, value: {
+      id: expect.any(String), createdAt: expect.any(String),
+      authorId: writer.userId, authorName: writer.displayName, ...longInput,
+    } });
+    expect(readPosts()).toEqual({ ok: true, posts: [original, other, created.value] });
+    const replacement = { ...original, ...longInput };
+    expect(updatePost('post', longInput, writer)).toEqual({ ok: true, value: replacement });
+    expect(storedPosts()).toEqual([replacement, other, created.value]);
+    expect(postExcerpt(replacement.content)).toBe(longInput.content.slice(0, 120));
+  });
+
+  it('preserves all records and metadata across create, update and immutable newest-first sorting of 500 seeded posts', () => {
+    const records = stressPosts();
+    const originalRecords = JSON.parse(JSON.stringify(records));
+    seed(writer, records);
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-01-02T03:04:05.000Z'));
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue('00000000-0000-4000-8000-000000000500');
+    const created = {
+      id: '00000000-0000-4000-8000-000000000500', createdAt: '2026-01-02T03:04:05.000Z',
+      authorId: writer.userId, authorName: writer.displayName, ...longInput,
+    };
+    expect(createPost(longInput, writer)).toEqual({ ok: true, value: created });
+    expect(storedPosts()).toEqual([...originalRecords, created]);
+    const revisedInput = { title: `${longInput.title}Revised`, content: `${longInput.content}Final line\n` };
+    const replacement = { ...originalRecords[250], ...revisedInput };
+    expect(updatePost('post', revisedInput, writer)).toEqual({ ok: true, value: replacement });
+    const expected = originalRecords.map((record) => record.id === 'post' ? replacement : record);
+    expected.push(created);
+    expect(readPosts()).toEqual({ ok: true, posts: expected });
+    const snapshot = readPosts().posts;
+    const durable = localStorage.getItem('writespace_posts');
+    const sorted = sortPostsNewest(snapshot);
+    expect(sorted).toEqual([created, ...expected.slice(0, 500).reverse()]);
+    expect(sorted).not.toBe(snapshot);
+    expect(snapshot).toEqual(expected);
+    expect(records).toEqual(originalRecords);
+    expect(localStorage.getItem('writespace_posts')).toBe(durable);
+  });
+
+  it.each(mutations)('preserves the complete 500-record durable state when %s is quota denied', (_name, mutate) => {
+    const records = stressPosts();
+    seed(writer, records);
+    const durable = localStorage.getItem('writespace_posts');
+    const session = localStorage.getItem('writespace_session');
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('No capacity', 'QuotaExceededError');
+    });
+    expect(mutate(longInput, writer)).toEqual({ ok: false, code: 'STORAGE_WRITE' });
+    expect(localStorage.getItem('writespace_posts')).toBe(durable);
+    expect(localStorage.getItem('writespace_session')).toBe(session);
+    expect(readPosts()).toEqual({ ok: true, posts: records });
+    expect(sortPostsNewest(readPosts().posts)).toEqual([...records].reverse());
+    expect(localStorage.getItem('writespace_posts')).toBe(durable);
+  });
+});
+
  describe('createPost', () => {
   it.each([writer, admin])('creates a complete UUID/ISO post from the current identity %j and appends once', (session) => {
     seed(session);

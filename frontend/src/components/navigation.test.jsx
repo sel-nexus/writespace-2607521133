@@ -1,4 +1,5 @@
 /** Verify role navigation, fail-closed gates, avatars and click-only actions. */
+import { BookOpen, Crown, UserCircle } from '@phosphor-icons/react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -106,6 +107,31 @@ describe('Avatar and PublicNavbar', () => {
       expect(screen.getByRole('img').querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     },
   );
+
+  it.each([
+    ['admin', 'Admin avatar', Crown, 'bg-violet-100', 'text-violet-900'],
+    ['user', 'User avatar', BookOpen, 'bg-indigo-100', 'text-indigo-900'],
+    [null, 'Guest avatar', UserCircle, 'bg-slate-100', 'text-slate-900'],
+    ['owner', 'Guest avatar', UserCircle, 'bg-slate-100', 'text-slate-900'],
+  ])('renders the actual role glyph and colors for %s', (role, label, ExpectedIcon, background, foreground) => {
+    render(<Avatar role={role} />);
+    const avatar = screen.getByRole('img', { name: label });
+    const glyph = avatar.querySelector('svg');
+    // Compare real library-rendered geometry, not mocked icon names or labels.
+    const reference = render(<ExpectedIcon size={24} weight="regular" aria-hidden="true" />);
+    const expectedGlyph = reference.container.querySelector('svg');
+    expect(glyph).toHaveAttribute('aria-hidden', 'true');
+    expect(glyph).toHaveAttribute('viewBox', expectedGlyph.getAttribute('viewBox'));
+    expect(glyph.querySelector('path')).not.toBeNull();
+    expect(glyph.innerHTML).toBe(expectedGlyph.innerHTML);
+    expect(avatar).toHaveClass(background, foreground);
+    for (const color of ['violet', 'indigo', 'slate']) {
+      if (background !== `bg-${color}-100`) {
+        expect(avatar).not.toHaveClass(`bg-${color}-100`);
+        expect(avatar).not.toHaveClass(`text-${color}-900`);
+      }
+    }
+  });
 
   it.each(invalid)('shows native guest links for %j', (session) => {
     mount(<PublicNavbar session={session} />);

@@ -113,6 +113,62 @@ describe('Admin account creation', () => {
     expect(localStorage.getItem('writespace_posts')).toBe(before.writespace_posts);
   });
 
+  it.each([1, 500])('preserves exact long accepted fields and appends after all %i existing accounts in order', (count) => {
+    const accounts = Array.from({ length: count }, (_, index) => ({
+      ...existing, id: `legacy-${index}`, username: `taken-${index}`, displayName: `Legacy Writer ${index}`,
+    }));
+    localStorage.setItem('writespace_users', JSON.stringify(accounts));
+    // Representative long values, not a maximum length or a timing requirement.
+    const longInput = {
+      displayName: `  ${'Long Writer Ω '.repeat(1024)}  `,
+      username: ` Long-Writer-${'AbCΩ'.repeat(1024)} `,
+      password: `  ${'Demo-only Secret Ω '.repeat(1024)}  `,
+      role: 'user',
+    };
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue(uuid);
+    vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('2025-07-06T12:00:00.000Z');
+    const before = bytes();
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    const expected = { ...longInput, id: uuid, createdAt: '2025-07-06T12:00:00.000Z' };
+
+    expect(validateUserInput(longInput)).toEqual({});
+    expect(createUser(longInput, admin)).toEqual({ ok: true, value: expected });
+    expect(JSON.parse(localStorage.getItem('writespace_users'))).toEqual([...accounts, expected]);
+    expect(readUsers()).toEqual({ ok: true, users: [defaultAdmin, ...accounts, expected], storedCount: count + 1 });
+    expect(write).toHaveBeenCalledExactlyOnceWith('writespace_users', JSON.stringify([...accounts, expected]));
+    expect(localStorage.getItem('writespace_session')).toBe(before.writespace_session);
+    expect(localStorage.getItem('writespace_posts')).toBe(before.writespace_posts);
+  });
+
+  it.each([1, 500])('leaves every durable byte and all %i existing accounts in order unchanged on long-input quota failure', (count) => {
+    const accounts = Array.from({ length: count }, (_, index) => ({
+      ...existing, id: `legacy-${index}`, username: `taken-${index}`, displayName: `Legacy Writer ${index}`,
+    }));
+    localStorage.setItem('writespace_users', JSON.stringify(accounts));
+    const longInput = {
+      displayName: `  ${'Long Writer Ω '.repeat(1024)}  `,
+      username: ` Long-Writer-${'AbCΩ'.repeat(1024)} `,
+      password: `  ${'Demo-only Secret Ω '.repeat(1024)}  `,
+      role: 'user',
+    };
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue(uuid);
+    vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('2025-07-06T12:00:00.000Z');
+    const before = bytes();
+    const expected = { ...longInput, id: uuid, createdAt: '2025-07-06T12:00:00.000Z' };
+    const write = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage quota exceeded', 'QuotaExceededError');
+    });
+    try {
+      expectFailure(createUser(longInput, admin), 'STORAGE_WRITE', before);
+      expect(write).toHaveBeenCalledExactlyOnceWith('writespace_users', JSON.stringify([...accounts, expected]));
+    } finally {
+      write.mockRestore();
+    }
+    expect(bytes()).toEqual(before);
+    expect(JSON.parse(localStorage.getItem('writespace_users'))).toEqual(accounts);
+    expect(readUsers()).toEqual({ ok: true, users: [defaultAdmin, ...accounts], storedCount: count });
+  });
+
   it('accepts a stored Admin session and absent accounts with real generated UUID/ISO', () => {
     seed(storedAdmin);
     localStorage.removeItem('writespace_users');

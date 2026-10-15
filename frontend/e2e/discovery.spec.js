@@ -92,6 +92,8 @@ test('desktop discovery reloads the newest actual previews without persisting sa
   // Account entry is implemented; this discovery journey remains read-only.
   await expect(page.getByRole('form', { name: 'Login' })).toBeVisible();
   await page.getByRole('link', { name: 'Return to WriteSpace' }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: tagline })).toBeVisible();
   await page.reload();
   await expect(latest.getByRole('heading', { level: 3 })).toHaveText([
     'Saved thought 4', 'Saved thought 3', 'Saved thought 2',
@@ -106,13 +108,77 @@ for (const [label, expectedPath] of [['Start Reading', '/login'], ['Get Started 
     await page.goto('/');
     const before = await readBrowserData(page);
     await page.getByRole('link', { name: label, exact: true }).click();
-    expect(new URL(page.url()).pathname).toBe(expectedPath);
+    await expect(page).toHaveURL(new RegExp(`${expectedPath}$`));
     await expect(page.getByRole('form', { name: expectedPath === '/login' ? 'Login' : 'Register', exact: true })).toBeVisible();
     await page.getByRole('link', { name: 'Return to WriteSpace' }).click();
     await expect(page.getByRole('heading', { name: tagline })).toBeVisible();
     expect(await readBrowserData(page)).toEqual(before);
     expect(errors).toEqual([]);
   });
+}
+
+for (const width of [1440, 390]) {
+  for (const signedIn of [false, true]) {
+    test(`landing View all blogs reaches ${signedIn ? 'the actual list' : 'Login'} without storage changes at ${width}px`, async ({ page }) => {
+      const errors = captureRuntimeErrors(page);
+      await page.setViewportSize({ width, height: 1000 });
+      await page.goto('/');
+      await expect(page.getByRole('heading', { level: 1, name: tagline })).toBeVisible();
+      const records = fixturePosts();
+      await page.evaluate(({ posts, identity }) => {
+        localStorage.setItem('writespace_posts', JSON.stringify(posts));
+        if (identity) localStorage.setItem('writespace_session', JSON.stringify(identity));
+        localStorage.setItem('navigation-sentinel', 'keep local data');
+        sessionStorage.setItem('navigation-sentinel', 'keep temporary data');
+      }, { posts: records, identity: signedIn ? writer : null });
+      const before = await readBrowserData(page);
+      await page.reload();
+      const latest = page.getByRole('region', { name: 'Latest Posts', exact: true });
+      await expect(latest.getByRole('heading', { level: 3 })).toHaveText([
+        'Saved thought 4', 'Saved thought 3', 'Saved thought 2',
+      ]);
+      const viewAll = latest.getByRole('link', { name: 'View all blogs', exact: true });
+      await expect(viewAll).toHaveAttribute('href', '/blogs');
+      await viewAll.click();
+      await expect(page).toHaveURL(signedIn ? /\/blogs$/ : /\/login$/);
+      if (signedIn) {
+        const main = page.getByRole('main');
+        await expect(main.getByRole('heading', { level: 1, name: 'All Blogs', exact: true })).toBeVisible();
+        const articles = main.getByRole('article');
+        await expect(articles).toHaveCount(4);
+        await expect(articles.getByRole('heading', { level: 2 })).toHaveText([
+          'Saved thought 4', 'Saved thought 3', 'Saved thought 2', 'Saved thought 1',
+        ]);
+        for (const day of [3, 2, 1]) {
+          const article = articles.filter({ has: page.getByRole('heading', { level: 2, name: `Saved thought ${day}`, exact: true }) });
+          await expect(article.getByText(`Actual local post ${day}.`, { exact: true })).toBeVisible();
+          await expect(article.getByText('Local Writer', { exact: true })).toBeVisible();
+        }
+        expect(await readBrowserData(page)).toEqual(before);
+        // The brand link remains visible even when the mobile account menu is collapsed.
+        await page.getByRole('navigation', { name: 'Account navigation', exact: true })
+          .getByRole('link', { name: 'WriteSpace home', exact: true }).click();
+      } else {
+        const form = page.getByRole('form', { name: 'Login', exact: true });
+        await expect(page.getByRole('heading', { level: 1, name: 'Welcome back', exact: true })).toBeVisible();
+        await expect(form).toBeVisible();
+        await expect(form.getByLabel(/^Username/)).toBeVisible();
+        await expect(form.getByLabel(/^Username/)).toHaveValue('');
+        await expect(form.getByLabel(/^Password/)).toBeVisible();
+        await expect(form.getByLabel(/^Password/)).toHaveAttribute('type', 'password');
+        await expect(form.getByRole('button', { name: 'Log in', exact: true })).toBeVisible();
+        expect(await readBrowserData(page)).toEqual(before);
+        await page.getByRole('link', { name: 'Return to WriteSpace', exact: true }).click();
+      }
+      await expect(page).toHaveURL(/\/$/);
+      await expect(page.getByRole('heading', { level: 1, name: tagline })).toBeVisible();
+      await expect(latest.getByRole('heading', { level: 3 })).toHaveText([
+        'Saved thought 4', 'Saved thought 3', 'Saved thought 2',
+      ]);
+      expect(await readBrowserData(page)).toEqual(before);
+      expect(errors).toEqual([]);
+    });
+  }
 }
 
 for (const [label, href, finalPath] of [
@@ -125,7 +191,7 @@ for (const [label, href, finalPath] of [
     const link = page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: label, exact: true });
     await expect(link).toHaveAttribute('href', href);
     await link.click();
-    expect(new URL(page.url()).pathname).toBe(finalPath);
+    await expect(page).toHaveURL(new RegExp(`${finalPath}$`));
     if (label === 'Home') await expect(page.getByRole('heading', { name: tagline })).toBeVisible();
     else await expect(page.getByRole('form', { name: finalPath === '/login' ? 'Login' : 'Register', exact: true })).toBeVisible();
     expect(await readBrowserData(page)).toEqual(before);
@@ -152,9 +218,10 @@ test('mobile discovery and account navigation retain hierarchy, close on links a
   await expect(page.getByRole('button', { name: 'Logout' })).toBeHidden();
   await toggle.click();
   await expect(page.getByRole('button', { name: 'Close navigation' })).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.getByRole('link', { name: 'All Blogs', exact: true })).toHaveAttribute('aria-current', 'page');
+  const accountNavigation = page.getByRole('navigation', { name: 'Account navigation', exact: true });
+  await expect(accountNavigation.getByRole('link', { name: 'All Blogs', exact: true })).toHaveAttribute('aria-current', 'page');
   await attachPreflight(page, testInfo, 'mobile-account-menu-open');
-  await page.getByRole('link', { name: 'Write', exact: true }).click();
+  await accountNavigation.getByRole('link', { name: 'Write', exact: true }).click();
   await expect(page).toHaveURL(/\/write$/);
   await expect(page.getByRole('button', { name: 'Open navigation' })).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('button', { name: 'Logout' })).toBeHidden();
@@ -181,15 +248,17 @@ test('Admin public destination opens real dashboard and account management witho
   await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
   await expect(page.getByRole('definition')).toHaveText(['0', '1', '1', '1']);
   await attachPreflight(page, testInfo, 'desktop-admin-dashboard');
-  await expect(page.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('aria-current', 'page');
-  await page.getByRole('link', { name: 'Users', exact: true }).click();
+  const accountNavigation = page.getByRole('navigation', { name: 'Account navigation', exact: true });
+  await expect(accountNavigation.getByRole('link', { name: 'Dashboard', exact: true })).toHaveAttribute('aria-current', 'page');
+  await accountNavigation.getByRole('link', { name: 'Users', exact: true }).click();
   await expect(page).toHaveURL(/\/users$/);
   await expect(page.getByRole('heading', { level: 1, name: 'User Management' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Delete', exact: true })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Delete', exact: true })).toHaveAttribute('title', 'Default admin cannot be deleted.');
-  await expect(page.getByRole('link', { name: 'Users', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(accountNavigation.getByRole('link', { name: 'Users', exact: true })).toHaveAttribute('aria-current', 'page');
   await attachPreflight(page, testInfo, 'desktop-admin-navigation');
-  await page.getByRole('link', { name: 'Home', exact: true }).click();
+  await accountNavigation.getByRole('link', { name: 'Home', exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole('heading', { name: tagline })).toBeVisible();
   expect(await readBrowserData(page)).toEqual(before);
   expect(errors).toEqual([]);

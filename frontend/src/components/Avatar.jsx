@@ -1,6 +1,6 @@
 /** Render a role icon without implying identity for invalid roles. */
 import PropTypes from 'prop-types';
-import { ShieldCheck, UserCircle } from '@phosphor-icons/react';
+import { BookOpen, Crown, UserCircle } from '@phosphor-icons/react';
 
 /**
  * Show a compact, accessible role marker.
@@ -10,14 +10,18 @@ import { ShieldCheck, UserCircle } from '@phosphor-icons/react';
  */
 export default function Avatar({ role = null }) {
   const admin = role === 'admin';
-  const label = admin ? 'Admin avatar' : role === 'user' ? 'User avatar' : 'Guest avatar';
-  const Icon = admin ? ShieldCheck : UserCircle;
+  const user = role === 'user';
+  const label = admin ? 'Admin avatar' : user ? 'User avatar' : 'Guest avatar';
+  const Icon = admin ? Crown : user ? BookOpen : UserCircle;
+  const colors = admin
+    ? 'bg-violet-100 text-violet-900'
+    : user ? 'bg-indigo-100 text-indigo-900' : 'bg-slate-100 text-slate-900';
 
   return (
     <span
       role="img"
       aria-label={label}
-      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-900"
+      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${colors}`}
     >
       <Icon size={24} weight="regular" aria-hidden="true" />
     </span>

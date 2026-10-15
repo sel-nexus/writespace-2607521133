@@ -8,6 +8,24 @@ import { canMutatePost } from '../helpers/auth.js';
 import { createPost, mutationMessage, readPosts, updatePost } from '../helpers/posts.js';
 
 /**
+ * Read a settled editor snapshot without saving or navigating during initialization.
+ * @param {boolean} editing - Whether the route requests an existing post.
+ * @param {string|undefined} id - Exact edit target ID.
+ * @param {object|null} session - Viewer identity for permission checks.
+ * @returns {object} Draft values and ready, missing, read-error or forbidden diagnostics.
+ */
+function readEditor(editing, id, session) {
+  const draft = { title: '', content: '', error: '', state: 'ready' };
+  if (!editing) return draft;
+  const snapshot = readPosts();
+  if (!snapshot.ok) return { ...draft, state: 'read-error', error: mutationMessage(snapshot.code) };
+  const post = snapshot.posts.find((item) => item.id === id);
+  if (!post) return { ...draft, state: 'missing' };
+  if (!canMutatePost(session, post)) return { ...draft, state: 'forbidden' };
+  return { ...draft, title: post.title, content: post.content };
+}
+
+/**
  * Load an edit target or offer a blank create form; save only through checked helpers.
  * @param {object} props - Writer contract.
  * @param {'create'|'edit'} [props.mode] - Explicit route intent.
@@ -18,39 +36,21 @@ export default function WriteBlog({ mode = 'create', session = null }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const editing = mode === 'edit';
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [initial] = useState(() => readEditor(editing, id, session));
+  const [title, setTitle] = useState(initial.title);
+  const [content, setContent] = useState(initial.content);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [error, setError] = useState('');
-  const [state, setState] = useState(editing ? 'loading' : 'ready');
+  const [error, setError] = useState(initial.error);
+  const [state, setState] = useState(initial.state);
 
   useEffect(() => {
+    const snapshot = readEditor(editing, id, session);
     setFieldErrors({});
-    setError('');
-    if (!editing) {
-      setTitle('');
-      setContent('');
-      setState('ready');
-      return;
-    }
-    const snapshot = readPosts();
-    if (!snapshot.ok) {
-      setState('read-error');
-      setError(mutationMessage(snapshot.code));
-      return;
-    }
-    const post = snapshot.posts.find((item) => item.id === id);
-    if (!post) {
-      setState('missing');
-      return;
-    }
-    if (!canMutatePost(session, post)) {
-      navigate('/blogs', { replace: true });
-      return;
-    }
-    setTitle(post.title);
-    setContent(post.content);
-    setState('ready');
+    setError(snapshot.error);
+    setTitle(snapshot.title);
+    setContent(snapshot.content);
+    setState(snapshot.state);
+    if (snapshot.state === 'forbidden') navigate('/blogs', { replace: true });
   }, [editing, id, session, navigate]);
 
   /** Validate and save once on submit; retain exact draft values on every failed write. */
@@ -79,11 +79,7 @@ export default function WriteBlog({ mode = 'create', session = null }) {
   const cancelPath = editing ? `/blog/${encodeURIComponent(id || '')}` : '/blogs';
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl flex-1 px-5 py-12 sm:px-10">
-      {state === 'loading' ? (
-        <p role="status">
-          Loading post…
-        </p>
-      ) : state === 'missing' || state === 'read-error' ? (
+      {state === 'forbidden' ? null : state === 'missing' || state === 'read-error' ? (
         <>
           <h1 className="font-['Georgia',serif] text-4xl">
             {state === 'missing' ? 'Post not found' : 'Could not load post'}

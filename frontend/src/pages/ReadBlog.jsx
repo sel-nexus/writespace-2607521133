@@ -14,7 +14,7 @@ import { formatPostDate, mutationMessage, readPosts } from '../helpers/posts.js'
 export default function ReadBlog({ session = null }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [snapshot, setSnapshot] = useState(null);
+  const [snapshot, setSnapshot] = useState(() => readPosts());
 
   useEffect(() => { setSnapshot(readPosts()); }, [id]);
 
@@ -23,17 +23,13 @@ export default function ReadBlog({ session = null }) {
     navigate('/blogs');
   }
 
-  const post = snapshot?.posts.find((item) => item.id === id);
+  const post = snapshot.posts.find((item) => item.id === id);
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl flex-1 px-5 py-12 sm:px-10">
       <Link to="/blogs" className="inline-flex min-h-11 items-center rounded-md text-violet-800 underline focus-visible:ring-2">
         Back to All Blogs
       </Link>
-      {!snapshot ? (
-        <p role="status" className="mt-8">
-          Loading post…
-        </p>
-      ) : !snapshot.ok ? (
+      {!snapshot.ok ? (
         <p role="alert" className="mt-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950">
           {mutationMessage(snapshot.code)}
         </p>

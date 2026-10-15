@@ -31,11 +31,9 @@ export default function AdminDashboard({ session = null }) {
   ];
   const recent = sortPostsNewest(posts.posts).slice(0, 5);
 
-  /** Remove from the rendered snapshot only after the real delete helper succeeds. */
-  function onDeleted(postId) {
-    setSnapshot((current) => ({
-      ...current, posts: { ...current.posts, posts: current.posts.posts.filter((post) => post.id !== postId) },
-    }));
+  /** Reread authoritative posts and accounts with diagnostics after the real delete helper succeeds. */
+  function onDeleted() {
+    setSnapshot(readDashboard());
   }
 
   return (

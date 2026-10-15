@@ -80,7 +80,15 @@ async function createAccount(page, displayName, username, role) {
 
 /** Assert protected affordances and expose the tooltip through its keyboard-focusable wrapper. */
 async function expectProtection(page, username, reason) {
-  const row = page.getByRole('row').filter({ hasText: username });
+  const escapedUsername = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // UserRow keeps the hidden desktop/mobile Username label inside the second td.
+  const usernameCell = page.locator('td:nth-child(2)').filter({
+    hasText: new RegExp(`^\\s*Username\\s*${escapedUsername}\\s*$`),
+  });
+  const table = page.getByRole('region', { name: 'Accounts', exact: true }).getByRole('table');
+  const row = table.locator('tbody tr').filter({ has: usernameCell });
+  await expect(row).toHaveCount(1);
+  await expect(row.locator('td').nth(1)).toHaveText(new RegExp(`^\\s*Username\\s*${escapedUsername}\\s*$`));
   const button = row.getByRole('button', { name: 'Delete', exact: true });
   await expect(button).toBeDisabled();
   await expect(button).toHaveAttribute('title', reason);
@@ -179,35 +187,48 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(new RegExp(`/edit/${target.id}$`));
     await page.getByLabel(/^Title/).fill('Cancelled oversight draft');
     await page.getByRole('link', { name: 'Cancel', exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/blog/${target.id}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(target.title);
     expect((await readStorage(page)).posts).toEqual(authored.posts);
     await accountLink(page, 'Dashboard');
     await recent.getByRole('article').first().getByRole('link', { name: 'Edit', exact: true }).click();
     await page.getByLabel(/^Title/).fill('Admin revised writer story');
     await page.getByLabel(/^Content/).fill('Reviewed by Admin, still authored by Journey Writer.');
     await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/blog/${target.id}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Admin revised writer story');
     const revised = { ...target, title: 'Admin revised writer story', content: 'Reviewed by Admin, still authored by Journey Writer.' };
     const expectedPosts = authored.posts.map((post) => post.id === target.id ? revised : post);
     expect((await readStorage(page)).posts).toEqual(expectedPosts);
     await accountLink(page, 'Dashboard');
+    await expect(page).toHaveURL(/\/admin$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
     await page.reload();
     await expect(recent.getByRole('article').first().getByRole('heading')).toHaveText(revised.title);
     const beforeDelete = await readStorage(page);
-    page.once('dialog', async (dialog) => {
-      expect(dialog.message()).toBe('Delete this post? This cannot be undone.');
+    const dismissedDialog = page.waitForEvent('dialog').then(async (dialog) => {
+      const message = dialog.message();
       await dialog.dismiss();
+      return message;
     });
     await recent.getByRole('article').first().getByRole('button', { name: 'Delete', exact: true }).click();
+    expect(await dismissedDialog).toBe('Delete this post? This cannot be undone.');
     expect(await readStorage(page)).toEqual(beforeDelete);
     await expect(page.getByRole('definition')).toHaveText(['6', '3', '2', '3']);
     await expect(recent.getByRole('article').first().getByRole('heading')).toHaveText(revised.title);
-    page.once('dialog', (dialog) => dialog.accept());
+    const acceptedDialog = page.waitForEvent('dialog').then(async (dialog) => {
+      const message = dialog.message();
+      await dialog.accept();
+      return message;
+    });
     await recent.getByRole('article').first().getByRole('button', { name: 'Delete', exact: true }).click();
+    expect(await acceptedDialog).toBe('Delete this post? This cannot be undone.');
+    await expect(page.getByRole('definition')).toHaveText(['5', '3', '2', '3']);
+    await expect(recent.getByRole('heading', { name: revised.title, exact: true })).toHaveCount(0);
     const deleted = await readStorage(page);
     expect(deleted.posts).toEqual(expectedPosts.filter((post) => post.id !== target.id));
     expect(deleted.users).toEqual(saved.users);
     expect(deleted.session).toEqual(beforeDelete.session);
-    await expect(page.getByRole('definition')).toHaveText(['5', '3', '2', '3']);
-    await expect(recent.getByRole('heading', { name: revised.title })).toHaveCount(0);
     await page.reload();
     expect(await readStorage(page)).toEqual(deleted);
     await page.getByRole('navigation', { name: 'Quick actions' }).getByRole('link', { name: 'Users' }).click();

@@ -53,11 +53,48 @@ async function expectForm(page, name, labels) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByText(/Local-only demo/)).toContainText('Passwords are stored in plaintext');
   await expect(page.getByText(/Local-only demo/)).toContainText('Do not use real or reused passwords');
-  await expect(page.getByText('Illustrative sample', { exact: true })).toHaveCount(3);
-  await expect(page.getByText('Admin · Sample author', { exact: true })).toHaveCount(3);
+  const samples = page.getByRole('region', { name: 'Every story starts with a blank page.', exact: true });
+  await expect(samples).toBeVisible();
+  await expect(samples.getByRole('article')).toHaveCount(3);
+  for (const article of await samples.getByRole('article').all()) {
+    await expect(article.getByRole('heading', { level: 3, name: 'Post Title', exact: true })).toHaveText('Post Title');
+    await expect(article.getByText('Full post text...', { exact: true })).toBeVisible();
+    await expect(article.getByText('Admin', { exact: true })).toBeVisible();
+    await expect(article.getByText('Illustrative sample', { exact: true })).toBeVisible();
+  }
 }
 
 for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+  test(`public-header Login opens the actual form without storage changes at ${viewport.width}px`, async ({ page }) => {
+    const errors = captureRuntimeErrors(page);
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1, name: tagline })).toBeVisible();
+    await page.evaluate(() => {
+      localStorage.setItem('writespace_users', '[]');
+      localStorage.setItem('writespace_posts', '[]');
+      localStorage.setItem('navigation-sentinel', 'keep local data');
+      sessionStorage.setItem('navigation-sentinel', 'keep temporary data');
+    });
+    const before = await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }));
+    const login = page.getByRole('navigation', { name: 'Public navigation', exact: true })
+      .getByRole('link', { name: 'Login', exact: true });
+    await expect(login).toHaveAttribute('href', '/login');
+    await login.click();
+    await expect(page).toHaveURL(/\/login$/);
+    await expectForm(page, 'Login', ['Username', 'Password']);
+    const form = page.getByRole('form', { name: 'Login', exact: true });
+    await expect(form.getByLabel(/^Username/)).toHaveValue('');
+    await expect(form.getByLabel(/^Password/)).toHaveAttribute('type', 'password');
+    await expect(form.getByRole('button', { name: 'Log in', exact: true })).toBeVisible();
+    expect(await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }))).toEqual(before);
+    await page.getByRole('link', { name: 'Return to WriteSpace', exact: true }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('heading', { level: 1, name: tagline })).toBeVisible();
+    expect(await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }))).toEqual(before);
+    expect(errors).toEqual([]);
+  });
+
   test(`real registration, reload, logout, invalid login and persisted-account login at ${viewport.width}px`, async ({ page }) => {
     const errors = captureRuntimeErrors(page);
     await page.setViewportSize(viewport);
@@ -95,6 +132,7 @@ for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844
     await page.reload();
     await expect(page.getByRole('link', { name: 'Start Reading' })).toHaveAttribute('href', '/login');
     await page.getByRole('link', { name: 'Start Reading' }).click();
+    await expect(page).toHaveURL(/\/login$/);
     await expectForm(page, 'Login', ['Username', 'Password']);
     await expect(page.getByText(/Demo Admin:/)).toHaveText('Demo Admin: username admin / password admin.');
     await page.getByLabel(/^Username/).fill('journey-writer');
@@ -181,6 +219,8 @@ test('built-in Admin logs in with explicit demo credentials, persists on reload 
   await expect(page.getByRole('heading', { level: 1, name: 'User Management' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Delete', exact: true })).toBeDisabled();
   await page.getByRole('navigation', { name: 'Account navigation' }).getByRole('link', { name: 'Dashboard' }).click();
+  await expect(page).toHaveURL(/\/admin$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
   const saved = await readAccounts(page);
   expect(saved.session).toEqual({ userId: 'admin', username: 'admin', displayName: 'Admin', role: 'admin' });
   expect(saved.users).toEqual([]);

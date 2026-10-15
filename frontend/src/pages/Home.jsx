@@ -11,7 +11,7 @@ import { mutationMessage, readPosts, sortPostsNewest } from '../helpers/posts.js
  * @returns {React.JSX.Element} Authenticated post listing.
  */
 export default function Home({ session = null }) {
-  const [snapshot, setSnapshot] = useState(null);
+  const [snapshot, setSnapshot] = useState(() => readPosts());
 
   /** Refresh only on entry or successful deletion, preserving explicit read diagnostics. */
   function refresh() {
@@ -35,37 +35,29 @@ export default function Home({ session = null }) {
           Write a post
         </Link>
       </header>
-      {!snapshot ? (
-        <p role="status">
-          Loading posts…
+      {!snapshot.ok && (
+        <p role="alert" className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950">
+          {mutationMessage(snapshot.code)}
         </p>
+      )}
+      {snapshot.posts.length === 0 ? (
+        <section aria-label="No posts" className="rounded-xl border border-dashed border-stone-300 p-8 sm:p-12">
+          <h2 className="font-['Georgia',serif] text-3xl">
+            No posts yet
+          </h2>
+          <p className="mb-6 mt-3 text-stone-700">
+            Give your first thought a home.
+          </p>
+          <Link to="/write" className="inline-flex min-h-11 items-center rounded-md font-semibold text-violet-800 underline focus-visible:ring-2">
+            Write your first post
+          </Link>
+        </section>
       ) : (
-        <>
-          {!snapshot.ok && (
-            <p role="alert" className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950">
-              {mutationMessage(snapshot.code)}
-            </p>
-          )}
-          {snapshot.posts.length === 0 ? (
-            <section aria-label="No posts" className="rounded-xl border border-dashed border-stone-300 p-8 sm:p-12">
-              <h2 className="font-['Georgia',serif] text-3xl">
-                No posts yet
-              </h2>
-              <p className="mb-6 mt-3 text-stone-700">
-                Give your first thought a home.
-              </p>
-              <Link to="/write" className="inline-flex min-h-11 items-center rounded-md font-semibold text-violet-800 underline focus-visible:ring-2">
-                Write your first post
-              </Link>
-            </section>
-          ) : (
-            <div aria-label="Posts" className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sortPostsNewest(snapshot.posts).map((post, index) => (
-                <BlogCard key={post.id} post={post} index={index} session={session} onDeleted={refresh} />
-              ))}
-            </div>
-          )}
-        </>
+        <div aria-label="Posts" className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sortPostsNewest(snapshot.posts).map((post, index) => (
+            <BlogCard key={post.id} post={post} index={index} session={session} onDeleted={refresh} />
+          ))}
+        </div>
       )}
     </main>
   );

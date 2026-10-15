@@ -112,7 +112,12 @@ for (const width of [1440, 390]) {
     await fillPost(page, 'Discard this draft', 'Discard this content');
     await page.getByRole('link', { name: 'Cancel', exact: true }).click();
     expect(await readStorage(page)).toEqual(account);
-    await accountLink(page, 'Write');
+    await page.getByRole('main').locator('header').getByRole('link', { name: 'Write a post', exact: true }).click();
+    await expect(page).toHaveURL(/\/write$/);
+    await expect(page.getByRole('form', { name: 'Write a post', exact: true })).toBeVisible();
+    await expect(page.getByLabel(/^Title/)).toHaveValue('');
+    await expect(page.getByLabel(/^Content/)).toHaveValue('');
+    expect(await readStorage(page)).toEqual(account);
     await page.getByRole('button', { name: 'Publish post' }).click();
     await expect(page.getByLabel(/^Title/)).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByLabel(/^Title/)).toHaveAttribute('aria-describedby', 'post-title-error');
@@ -122,6 +127,8 @@ for (const width of [1440, 390]) {
     expect(await page.getByLabel(/^Content/).evaluate((element) => parseFloat(getComputedStyle(element).minHeight))).toBeGreaterThanOrEqual(256);
     await fillPost(page, title, body);
     await page.getByRole('button', { name: 'Publish post' }).click();
+    await expect(page).toHaveURL(/\/blog\/[^/]+$/);
+    await expectTextSafe(page, title, body);
     const createdState = await readStorage(page);
     const created = createdState.posts[0];
     expect(createdState.posts).toHaveLength(1);
@@ -148,8 +155,9 @@ for (const width of [1440, 390]) {
     await fillPost(page, revisedTitle, revisedBody);
     await page.getByRole('button', { name: 'Save changes' }).click();
     const updated = { ...created, title: revisedTitle, content: revisedBody };
-    expect((await readStorage(page)).posts).toEqual([updated]);
+    await expect(page).toHaveURL(new RegExp(`/blog/${created.id}$`));
     await expectTextSafe(page, revisedTitle, revisedBody);
+    expect((await readStorage(page)).posts).toEqual([updated]);
     await page.reload();
     expect((await readStorage(page)).posts).toEqual([updated]);
     await expectTextSafe(page, revisedTitle, revisedBody);
@@ -196,6 +204,154 @@ for (const width of [1440, 390]) {
   });
 }
 
+for (const actor of ['owner', 'Admin']) {
+  test(`${actor} edits and cancels/confirms deletion through scoped All Blogs cards`, async ({ page }) => {
+    const errors = captureRuntimeErrors(page);
+    await page.goto('/');
+    await page.getByRole('link', { name: 'Get Started Free', exact: true }).click();
+    await register(page, 'cardowner');
+    await accountLink(page, 'Write');
+    await fillPost(page, 'Keep this card', 'The unrelated card must remain unchanged.');
+    await page.getByRole('button', { name: 'Publish post' }).click();
+    await expectTextSafe(page, 'Keep this card', 'The unrelated card must remain unchanged.');
+    const keeper = (await readStorage(page)).posts[0];
+    await accountLink(page, 'Write');
+    await fillPost(page, 'Edit this card', 'Owned by the registered writer.');
+    await page.getByRole('button', { name: 'Publish post' }).click();
+    await expectTextSafe(page, 'Edit this card', 'Owned by the registered writer.');
+    const target = (await readStorage(page)).posts[1];
+    if (actor === 'Admin') {
+      await logout(page);
+      await signIn(page, 'admin', 'admin');
+      await accountLink(page, 'All Blogs');
+      expect((await readStorage(page)).session.role).toBe('admin');
+      expect(target.authorId).not.toBe((await readStorage(page)).session.userId);
+    } else {
+      await page.getByRole('link', { name: 'Back to All Blogs', exact: true }).click();
+      expect((await readStorage(page)).session.userId).toBe(target.authorId);
+    }
+    await expect(page).toHaveURL(/\/blogs$/);
+    const cards = page.getByRole('main').getByRole('article');
+    await expect(cards).toHaveCount(2);
+    const targetCard = cards.filter({ has: page.getByRole('heading', { name: target.title, exact: true }) });
+    await expect(targetCard).toHaveCount(1);
+    await expect(targetCard.getByRole('link', { name: 'Edit', exact: true })).toHaveAttribute('href', `/edit/${target.id}`);
+    await targetCard.getByRole('link', { name: 'Edit', exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/edit/${target.id}$`));
+    await expect(page.getByLabel(/^Title/)).toHaveValue(target.title);
+    await expect(page.getByLabel(/^Content/)).toHaveValue(target.content);
+    const revised = { ...target, title: `${actor} revised the card`, content: 'Revised text\n  Same original author and date.' };
+    await fillPost(page, revised.title, revised.content);
+    await page.getByRole('button', { name: 'Save changes' }).click();
+    await expect(page).toHaveURL(new RegExp(`/blog/${target.id}$`));
+    await expectTextSafe(page, revised.title, revised.content);
+    expect((await readStorage(page)).posts).toEqual([keeper, revised]);
+    await page.getByRole('link', { name: 'Back to All Blogs', exact: true }).click();
+    await expect(page).toHaveURL(/\/blogs$/);
+    const revisedCard = cards.filter({ has: page.getByRole('heading', { name: revised.title, exact: true }) });
+    await expect(revisedCard).toHaveCount(1);
+    await expect(revisedCard.getByText(revised.content, { exact: true })).toBeVisible();
+    await expect(cards.getByRole('heading', { name: target.title, exact: true })).toHaveCount(0);
+    await page.reload();
+    await expect(revisedCard).toHaveCount(1);
+    expect((await readStorage(page)).posts).toEqual([keeper, revised]);
+    const beforeDelete = await readStorage(page);
+    const confirmations = [];
+    page.once('dialog', async (dialog) => {
+      confirmations.push({ type: dialog.type(), message: dialog.message() });
+      await dialog.dismiss();
+    });
+    await revisedCard.getByRole('button', { name: 'Delete', exact: true }).click();
+    expect(confirmations).toEqual([{ type: 'confirm', message: 'Delete this post? This cannot be undone.' }]);
+    await expect(page).toHaveURL(/\/blogs$/);
+    await expect(revisedCard).toHaveCount(1);
+    await expect(cards).toHaveCount(2);
+    expect(await readStorage(page)).toEqual(beforeDelete);
+    page.once('dialog', async (dialog) => {
+      confirmations.push({ type: dialog.type(), message: dialog.message() });
+      await dialog.accept();
+    });
+    await revisedCard.getByRole('button', { name: 'Delete', exact: true }).click();
+    expect(confirmations).toEqual([
+      { type: 'confirm', message: 'Delete this post? This cannot be undone.' },
+      { type: 'confirm', message: 'Delete this post? This cannot be undone.' },
+    ]);
+    await expect(page).toHaveURL(/\/blogs$/);
+    await expect(revisedCard).toHaveCount(0);
+    await expect(cards).toHaveCount(1);
+    await expect(cards.getByRole('heading')).toHaveText([keeper.title]);
+    const afterDelete = { ...beforeDelete, posts: [keeper] };
+    expect(await readStorage(page)).toEqual(afterDelete);
+    await page.reload();
+    await expect(cards.getByRole('heading')).toHaveText([keeper.title]);
+    expect(await readStorage(page)).toEqual(afterDelete);
+    const keeperCard = cards.filter({ has: page.getByRole('heading', { name: keeper.title, exact: true }) });
+    page.once('dialog', (dialog) => dialog.accept());
+    await keeperCard.getByRole('button', { name: 'Delete', exact: true }).click();
+    await expect(cards).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'No posts yet', exact: true })).toBeVisible();
+    const emptyState = { ...beforeDelete, posts: [] };
+    expect(await readStorage(page)).toEqual(emptyState);
+    await page.reload();
+    await expect(page).toHaveURL(/\/blogs$/);
+    await expect(cards).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'No posts yet', exact: true })).toBeVisible();
+    expect(await readStorage(page)).toEqual(emptyState);
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const entry of ['reader reload', 'editor reload', 'editor submit']) {
+  test(`a deleted post renders exact not-found with a working back link on ${entry}`, async ({ page }) => {
+    const errors = captureRuntimeErrors(page);
+    await page.goto('/');
+    await page.getByRole('link', { name: 'Get Started Free', exact: true }).click();
+    await register(page, 'missingpost');
+    await accountLink(page, 'Write');
+    await fillPost(page, 'A post removed elsewhere', 'The original durable body.');
+    await page.getByRole('button', { name: 'Publish post' }).click();
+    await expectTextSafe(page, 'A post removed elsewhere', 'The original durable body.');
+    const savedState = await readStorage(page);
+    const target = savedState.posts[0];
+    if (entry.startsWith('editor')) {
+      await page.getByRole('link', { name: 'Edit', exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/edit/${target.id}$`));
+      await expect(page.getByLabel(/^Title/)).toHaveValue(target.title);
+      await expect(page.getByLabel(/^Content/)).toHaveValue(target.content);
+    }
+    // Model another tab removing the persisted target, not a mocked helper or route change.
+    await page.evaluate(() => { localStorage.setItem('writespace_posts', JSON.stringify([])); });
+    const deletedState = { ...savedState, posts: [] };
+    expect(await readStorage(page)).toEqual(deletedState);
+    if (entry === 'editor submit') {
+      await fillPost(page, 'Must not recreate the deleted post', 'This draft must not be saved.');
+      await page.getByRole('button', { name: 'Save changes' }).click();
+    } else {
+      await page.reload();
+    }
+    const route = entry.startsWith('editor') ? 'edit' : 'blog';
+    await expect(page).toHaveURL(new RegExp(`/${route}/${target.id}$`));
+    const main = page.getByRole('main');
+    await expect(main.getByRole('heading', { level: 1 })).toHaveText('Post not found');
+    await expect(main.getByRole('article')).toHaveCount(0);
+    await expect(main.getByRole('form')).toHaveCount(0);
+    await expect(main.getByRole('link', { name: 'Edit', exact: true })).toHaveCount(0);
+    await expect(main.getByRole('button', { name: 'Delete', exact: true })).toHaveCount(0);
+    await expect(main.getByRole('button', { name: 'Save changes', exact: true })).toHaveCount(0);
+    expect(await readStorage(page)).toEqual(deletedState);
+    await main.getByRole('link', { name: 'Back to All Blogs', exact: true }).click();
+    await expect(page).toHaveURL(/\/blogs$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('All Blogs');
+    await expect(page.getByRole('heading', { name: 'No posts yet', exact: true })).toBeVisible();
+    await expect(page.getByRole('main').getByRole('article')).toHaveCount(0);
+    expect(await readStorage(page)).toEqual(deletedState);
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'No posts yet', exact: true })).toBeVisible();
+    expect(await readStorage(page)).toEqual(deletedState);
+    expect(errors).toEqual([]);
+  });
+}
+
  test('guest, two registered users and UI-signed-in Admin obey post ownership without changing authorship', async ({ page }) => {
   const errors = captureRuntimeErrors(page);
   await page.goto('/');
@@ -215,6 +371,8 @@ for (const width of [1440, 390]) {
   await accountLink(page, 'Write');
   await fillPost(page, 'Alice owns this', 'Alice body');
   await page.getByRole('button', { name: 'Publish post' }).click();
+  await expect(page).toHaveURL(/\/blog\/[^/]+$/);
+  await expectTextSafe(page, 'Alice owns this', 'Alice body');
   const aliceState = await readStorage(page);
   const alicePost = aliceState.posts.find((post) => post.title === 'Alice owns this');
   await expect(page.getByRole('link', { name: 'Edit', exact: true })).toBeVisible();
@@ -230,6 +388,8 @@ for (const width of [1440, 390]) {
   await accountLink(page, 'Write');
   await fillPost(page, 'Bob owns this', 'Bob body');
   await page.getByRole('button', { name: 'Publish post' }).click();
+  await expect(page).toHaveURL(/\/blog\/[^/]+$/);
+  await expectTextSafe(page, 'Bob owns this', 'Bob body');
   const bobPost = (await readStorage(page)).posts.find((post) => post.title === 'Bob owns this');
   await expect(page.getByRole('link', { name: 'Edit', exact: true })).toBeVisible();
   await logout(page);
@@ -247,6 +407,8 @@ for (const width of [1440, 390]) {
   await page.getByRole('link', { name: 'Edit', exact: true }).click();
   await fillPost(page, 'Admin revised Alice', 'Still Alice authored this');
   await page.getByRole('button', { name: 'Save changes' }).click();
+  await expect(page).toHaveURL(new RegExp(`/blog/${alicePost.id}$`));
+  await expectTextSafe(page, 'Admin revised Alice', 'Still Alice authored this');
   const revisedAlice = { ...alicePost, title: 'Admin revised Alice', content: 'Still Alice authored this' };
   expect((await readStorage(page)).posts).toEqual([foreign, revisedAlice, bobPost]);
   await page.reload();

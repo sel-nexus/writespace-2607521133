@@ -1,7 +1,8 @@
 /** Verify listing, detail and writer routes using real guarded storage and click/submit interactions. */
+import { useLayoutEffect } from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import Home from './Home.jsx';
 import ReadBlog from './ReadBlog.jsx';
@@ -30,8 +31,16 @@ function LocationProbe() {
   );
 }
 
-/** Mount only the post slice and actual post routes in one test router. */
-function mount(path = '/blogs', session = writer) {
+/** Observe the first committed DOM before passive storage-refresh effects can run. */
+function InitialRenderProbe({ observe }) {
+  useLayoutEffect(() => {
+    if (observe) observe(within(document.querySelector('main')));
+  }, []);
+  return null;
+}
+
+/** Mount actual post routes, optionally exposing first-commit observation and same-route links. */
+function mount(path = '/blogs', session = writer, { observeInitial, routeLinks = false } = {}) {
   return render(
     <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
@@ -40,6 +49,13 @@ function mount(path = '/blogs', session = writer) {
         <Route path="/write" element={<WriteBlog session={session} />} />
         <Route path="/edit/:id" element={<WriteBlog mode="edit" session={session} />} />
       </Routes>
+      <InitialRenderProbe observe={observeInitial} />
+      {routeLinks && (
+        <>
+          <Link to="/blog/other">Read another post</Link>
+          <Link to="/edit/other">Edit another post</Link>
+        </>
+      )}
       <LocationProbe />
     </MemoryRouter>,
   );
@@ -57,6 +73,118 @@ async function fillDraft(user, title = 'New title', content = 'New body\nSecond 
 function storedPosts() {
   return JSON.parse(localStorage.getItem('writespace_posts'));
 }
+
+describe('synchronous post snapshots', () => {
+  it.each([
+    ['/blogs', 'ready'], ['/blogs', 'empty'],
+    ['/blog/post', 'ready'], ['/blog/missing', 'missing'],
+    ['/write', 'create'], ['/edit/post', 'ready'], ['/edit/missing', 'missing'],
+  ])('commits the settled %s %s state before passive effects without writes', (path, state) => {
+    seed(state === 'empty' ? [] : [post]);
+    const before = localStorage.getItem('writespace_posts');
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    const observeInitial = vi.fn((main) => {
+      expect(main.queryByRole('status')).not.toBeInTheDocument();
+      expect(main.queryByText(/Loading posts?…/)).not.toBeInTheDocument();
+      if (state === 'empty' || state === 'missing') {
+        expect(main.getByRole('heading', { name: state === 'empty' ? 'No posts yet' : 'Post not found' })).toBeVisible();
+      } else if (path === '/write' || path === '/edit/post') {
+        expect(main.getByRole('form')).toBeVisible();
+        expect(main.getByLabelText(/^Title/)).toHaveValue(state === 'create' ? '' : post.title);
+        expect(main.getByLabelText(/^Content/)).toHaveValue(state === 'create' ? '' : post.content);
+      } else {
+        expect(main.getByRole('heading', { name: post.title })).toBeVisible();
+      }
+    });
+    mount(path, writer, { observeInitial });
+    expect(observeInitial).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem('writespace_posts')).toBe(before);
+    expect(write).not.toHaveBeenCalled();
+  });
+
+  it.each(['/blogs', '/blog/post', '/edit/post'])('commits read diagnostics immediately at %s', (path) => {
+    seed();
+    localStorage.setItem('writespace_posts', '{broken');
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    const observeInitial = vi.fn((main) => {
+      expect(main.getByRole('alert')).toHaveTextContent('Could not read saved posts');
+      expect(main.queryByRole('status')).not.toBeInTheDocument();
+      expect(main.queryByRole('heading', { name: 'Post not found' })).not.toBeInTheDocument();
+      if (path === '/edit/post') expect(main.queryByRole('form')).not.toBeInTheDocument();
+    });
+    mount(path, writer, { observeInitial });
+    expect(observeInitial).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem('writespace_posts')).toBe('{broken');
+    expect(write).not.toHaveBeenCalled();
+  });
+
+  it('never commits an unauthorized edit form before the effect redirects', () => {
+    seed([other]);
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    const observeInitial = vi.fn((main) => {
+      expect(main.queryByRole('form')).not.toBeInTheDocument();
+      expect(main.queryByRole('status')).not.toBeInTheDocument();
+    });
+    mount('/edit/other', writer, { observeInitial });
+    expect(observeInitial).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('location')).toHaveTextContent('/blogs');
+    expect(storedPosts()).toEqual([other]);
+    expect(write).not.toHaveBeenCalled();
+  });
+});
+
+describe('same-page route ID refresh', () => {
+  it('re-reads the reader snapshot for a newly stored route ID without writes', async () => {
+    const user = userEvent.setup();
+    seed();
+    mount('/blog/post', writer, { routeLinks: true });
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(post.title);
+    const fresh = { ...other, content: 'Freshly stored reader body' };
+    seed([fresh]);
+    const before = localStorage.getItem('writespace_posts');
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    await user.click(screen.getByRole('link', { name: 'Read another post' }));
+    expect(screen.getByTestId('location')).toHaveTextContent('/blog/other');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(fresh.title);
+    expect(screen.getByText(fresh.content)).toBeVisible();
+    expect(screen.queryByText(post.title)).not.toBeInTheDocument();
+    expect(localStorage.getItem('writespace_posts')).toBe(before);
+    expect(write).not.toHaveBeenCalled();
+  });
+
+  it.each(['ready', 'missing', 'read-error', 'forbidden'])(
+    'refreshes the editor target to %s and discards old draft/validation without writes', async (state) => {
+      const user = userEvent.setup();
+      seed();
+      mount('/edit/post', writer, { routeLinks: true });
+      await user.clear(screen.getByLabelText(/^Title/));
+      await user.click(screen.getByRole('button', { name: 'Save changes' }));
+      expect(screen.getByText('Title is required.')).toBeVisible();
+      const fresh = { ...other, authorId: 'writer', content: 'Fresh edit body' };
+      if (state === 'read-error') localStorage.setItem('writespace_posts', '{broken');
+      else seed(state === 'missing' ? [] : [state === 'forbidden' ? other : fresh]);
+      const before = localStorage.getItem('writespace_posts');
+      const write = vi.spyOn(Storage.prototype, 'setItem');
+      await user.click(screen.getByRole('link', { name: 'Edit another post' }));
+      expect(screen.getByTestId('location').textContent).toBe(state === 'forbidden' ? '/blogs' : '/edit/other');
+      expect(screen.queryByText('Title is required.')).not.toBeInTheDocument();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      if (state === 'ready') {
+        expect(screen.getByRole('form', { name: 'Edit post' })).toBeVisible();
+        expect(screen.getByLabelText(/^Title/)).toHaveValue(fresh.title);
+        expect(screen.getByLabelText(/^Content/)).toHaveValue(fresh.content);
+        expect(screen.getByText(`${fresh.content.length} characters`)).toBeVisible();
+      } else {
+        expect(screen.queryByRole('form')).not.toBeInTheDocument();
+        if (state === 'missing') expect(screen.getByRole('heading')).toHaveTextContent('Post not found');
+        if (state === 'read-error') expect(screen.getByRole('alert')).toHaveTextContent('Could not read saved posts');
+        if (state === 'forbidden') expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('All Blogs');
+      }
+      expect(localStorage.getItem('writespace_posts')).toBe(before);
+      expect(write).not.toHaveBeenCalled();
+    },
+  );
+});
 
  describe('Home', () => {
   it('lists all records newest first in the required responsive grid with four cycling borders and exact excerpt/date', () => {

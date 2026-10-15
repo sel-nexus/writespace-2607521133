@@ -258,9 +258,20 @@ describe('AuthLayout and FormField', () => {
     expect(document.querySelector('script')).toBeNull();
     expect(screen.getByRole('main').querySelectorAll('[aria-hidden="true"]')).toHaveLength(2);
     const samples = within(screen.getByRole('region', { name: 'Every story starts with a blank page.' }));
+    expect(samples.getByText('Illustrative samples, not saved posts. Your writing stays in this browser.')).toBeVisible();
     expect(samples.getAllByRole('article')).toHaveLength(3);
     expect(samples.getAllByText('Illustrative sample')).toHaveLength(3);
-    expect(samples.getAllByText('Admin · Sample author')).toHaveLength(3);
+    expect(samples.getAllByRole('heading', { level: 3, name: 'Post Title', exact: true })).toHaveLength(3);
+    expect(samples.getAllByText('Full post text...', { exact: true })).toHaveLength(3);
+    expect(samples.getAllByText('Admin', { exact: true })).toHaveLength(3);
+    for (const article of samples.getAllByRole('article')) {
+      expect(within(article).getByRole('heading', { level: 3, name: 'Post Title', exact: true })).toBeVisible();
+      expect(within(article).getByText('Full post text...', { exact: true })).toBeVisible();
+      expect(within(article).getByText('Admin', { exact: true })).toBeVisible();
+      expect(within(article).getByText('Illustrative sample')).toBeVisible();
+    }
+    expect(within(screen.getByRole('region', { name: 'A title' })).queryByRole('article')).not.toBeInTheDocument();
+    expect(localStorage.getItem('writespace_posts')).toBeNull();
     await user.click(screen.getByRole('link', { name: 'Return to WriteSpace' }));
     expect(screen.getByRole('heading', { name: 'A title' })).toBeVisible();
     expect(write).not.toHaveBeenCalled();

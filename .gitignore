@@ -16,5 +16,7 @@ publish_manifest.yaml
 test_report.yaml
 graphify-out/cache/
 graphify-out/cost.json
+graphify-out/.graphify_*
+graphify-out/GRAPH_REPORT.md
 frontend/test-results/
 frontend/playwright-report/

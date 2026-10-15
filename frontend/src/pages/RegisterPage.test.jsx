@@ -1,6 +1,6 @@
 /** Verify registration validation, durable identity and partial-state recovery. */
 import { StrictMode } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
@@ -80,8 +80,21 @@ describe('RegisterPage', () => {
     expect(screen.getByLabelText(labels.password)).toHaveAttribute('autocomplete', 'new-password');
     expect(screen.getByLabelText(/Confirm password/)).toHaveAttribute('autocomplete', 'new-password');
     expect(screen.getByText(/Local-only demo/)).toHaveTextContent(/plaintext.*Do not use real or reused passwords/);
-    expect(screen.getAllByText('Illustrative sample')).toHaveLength(3);
-    expect(screen.getAllByText('Admin · Sample author')).toHaveLength(3);
+    const samples = within(screen.getByRole('region', { name: 'Every story starts with a blank page.' }));
+    expect(samples.getByText('Illustrative samples, not saved posts. Your writing stays in this browser.')).toBeVisible();
+    expect(samples.getAllByRole('article')).toHaveLength(3);
+    expect(samples.getAllByText('Illustrative sample')).toHaveLength(3);
+    expect(samples.getAllByRole('heading', { level: 3, name: 'Post Title', exact: true })).toHaveLength(3);
+    expect(samples.getAllByText('Full post text...', { exact: true })).toHaveLength(3);
+    expect(samples.getAllByText('Admin', { exact: true })).toHaveLength(3);
+    for (const article of samples.getAllByRole('article')) {
+      expect(within(article).getByRole('heading', { level: 3, name: 'Post Title', exact: true })).toBeVisible();
+      expect(within(article).getByText('Full post text...', { exact: true })).toBeVisible();
+      expect(within(article).getByText('Admin', { exact: true })).toBeVisible();
+      expect(within(article).getByText('Illustrative sample')).toBeVisible();
+    }
+    expect(within(screen.getByRole('form', { name: 'Register' })).queryByRole('article')).not.toBeInTheDocument();
+    expect(localStorage.getItem('writespace_posts')).toBeNull();
     expect(register).not.toHaveBeenCalled();
     expect(write).not.toHaveBeenCalled();
     expect(remove).not.toHaveBeenCalled();
