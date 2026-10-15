@@ -12,6 +12,8 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import Home from './pages/Home.jsx';
 import ReadBlog from './pages/ReadBlog.jsx';
 import WriteBlog from './pages/WriteBlog.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import UserManagement from './pages/UserManagement.jsx';
 
 /**
  * Read the session without repairing corrupt or inaccessible storage.
@@ -55,7 +57,7 @@ function NotFoundEntry() {
 }
 
 /**
- * Resolve discovery and account-entry routes, guarding known future destinations.
+ * Resolve public and protected writing/Admin routes with the current session.
  * @returns {React.JSX.Element} Content inside the caller-owned router.
  * @note Auth pages receive session and onAuthenticated(nextSession).
  * The callback accepts only a valid, already-persisted session; it does not write.
@@ -124,7 +126,10 @@ export default function App() {
     ['/write', <WriteBlog mode="create" session={session} />],
     ['/edit/:id', <WriteBlog mode="edit" session={session} />],
   ];
-  const futureAdminPaths = ['/admin', '/users'];
+  const adminRoutes = [
+    ['/admin', <AdminDashboard session={session} />],
+    ['/users', <UserManagement session={session} />],
+  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 font-['Arial',sans-serif] text-stone-900">
@@ -162,13 +167,13 @@ export default function App() {
             )}
           />
         ))}
-        {futureAdminPaths.map((path) => (
+        {adminRoutes.map(([path, page]) => (
           <Route
             key={path}
             path={path}
             element={(
               <ProtectedRoute session={session} role="admin">
-                <NotFoundEntry />
+                {page}
               </ProtectedRoute>
             )}
           />

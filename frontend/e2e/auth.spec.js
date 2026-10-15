@@ -176,6 +176,11 @@ test('built-in Admin logs in with explicit demo credentials, persists on reload 
   await page.getByLabel(/^Password/).fill('admin');
   await page.getByRole('button', { name: 'Log in', exact: true }).click();
   await expect(page).toHaveURL(/\/admin$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
+  await page.getByRole('navigation', { name: 'Quick actions' }).getByRole('link', { name: 'Users' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'User Management' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Delete', exact: true })).toBeDisabled();
+  await page.getByRole('navigation', { name: 'Account navigation' }).getByRole('link', { name: 'Dashboard' }).click();
   const saved = await readAccounts(page);
   expect(saved.session).toEqual({ userId: 'admin', username: 'admin', displayName: 'Admin', role: 'admin' });
   expect(saved.users).toEqual([]);
@@ -224,6 +229,7 @@ for (const path of ['/login', '/register']) {
     }, session);
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
     expect((await readAccounts(page)).session).toEqual(session);
     expect((await readAccounts(page)).keys).toEqual(['writespace_session']);
     expect(errors).toEqual([]);

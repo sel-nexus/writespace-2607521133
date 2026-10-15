@@ -167,7 +167,7 @@ test('mobile discovery and account navigation retain hierarchy, close on links a
   expect(errors).toEqual([]);
 });
 
-test('Admin public destination and account menu obey the role without fake dashboard content', async ({ page }, testInfo) => {
+test('Admin public destination opens real dashboard and account management without writes', async ({ page }, testInfo) => {
   const errors = captureRuntimeErrors(page);
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
@@ -178,10 +178,15 @@ test('Admin public destination and account menu obey the role without fake dashb
   const before = await readBrowserData(page);
   await page.getByRole('link', { name: 'Dashboard' }).click();
   await expect(page).toHaveURL(/\/admin$/);
-  await expect(page.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Admin Dashboard' })).toBeVisible();
+  await expect(page.getByRole('definition')).toHaveText(['0', '1', '1', '1']);
+  await attachPreflight(page, testInfo, 'desktop-admin-dashboard');
   await expect(page.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('aria-current', 'page');
   await page.getByRole('link', { name: 'Users', exact: true }).click();
   await expect(page).toHaveURL(/\/users$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'User Management' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Delete', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Delete', exact: true })).toHaveAttribute('title', 'Default admin cannot be deleted.');
   await expect(page.getByRole('link', { name: 'Users', exact: true })).toHaveAttribute('aria-current', 'page');
   await attachPreflight(page, testInfo, 'desktop-admin-navigation');
   await page.getByRole('link', { name: 'Home', exact: true }).click();

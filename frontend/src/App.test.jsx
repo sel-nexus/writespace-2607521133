@@ -1,4 +1,4 @@
-/** Verify discovery entry, future-route protection and durable session transitions. */
+/** Verify public entry, implemented role routes and durable session transitions. */
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, useLocation } from 'react-router-dom';
@@ -171,11 +171,31 @@ describe('entry protection and session handling', () => {
     expect(screen.queryByRole('link', { name: 'Users' })).not.toBeInTheDocument();
   });
 
-  it.each(adminPaths)('keeps authorized future Admin route %s at not-found without a fake feature page', (path) => {
+  it.each([['/admin', 'Admin Dashboard'], ['/users', 'User Management']])(
+    'renders the real authorized Admin route %s', (path, heading) => {
+      localStorage.setItem('writespace_session', JSON.stringify(admin));
+      renderEntry(path);
+      expect(screen.getByTestId('location').textContent).toBe(path);
+      expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+      expect(screen.queryByRole('heading', { name: 'This page wandered off.' })).not.toBeInTheDocument();
+    },
+  );
+
+  it('passes Admin identity through dashboard navigation into real account creation without switching session', async () => {
+    const user = userEvent.setup();
     localStorage.setItem('writespace_session', JSON.stringify(admin));
-    renderEntry(path);
-    expect(screen.getByTestId('location').textContent).toBe(path);
-    expect(screen.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue('routed-account');
+    renderEntry('/admin');
+    await user.click(within(screen.getByRole('navigation', { name: 'Quick actions' })).getByRole('link', { name: 'Users' }));
+    expect(screen.getByTestId('location').textContent).toBe('/users');
+    await user.type(screen.getByLabelText(/^Display name/), 'Routed Admin');
+    await user.type(screen.getByLabelText(/^Username/), 'routed-admin');
+    await user.type(screen.getByLabelText(/^Password/), 'local-demo');
+    await user.selectOptions(screen.getByLabelText('Role'), 'admin');
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Account created.');
+    expect(JSON.parse(localStorage.getItem('writespace_users'))[0]).toMatchObject({ id: 'routed-account', role: 'admin' });
+    expect(JSON.parse(localStorage.getItem('writespace_session'))).toEqual(admin);
   });
 
   it.each([[writer, 'All Blogs', '/blogs'], [admin, 'Dashboard', '/admin']])(

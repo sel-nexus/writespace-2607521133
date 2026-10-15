@@ -124,6 +124,94 @@
       "community": 6
     },
     {
+      "id": "e2e_posts_spec",
+      "label": "posts.spec.js",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_captureruntimeerrors",
+      "label": "captureRuntimeErrors()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_readstorage",
+      "label": "readStorage()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_opennavigation",
+      "label": "openNavigation()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_accountlink",
+      "label": "accountLink()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L35",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_register",
+      "label": "register()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L41",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_logout",
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L52",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_signin",
+      "label": "signIn()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L61",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_fillpost",
+      "label": "fillPost()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L70",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_expecttextsafe",
+      "label": "expectTextSafe()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L77",
+      "_origin": "ast"
+    },
+    {
+      "id": "e2e_posts_spec_addunrelatedposts",
+      "label": "addUnrelatedPosts()",
+      "file_type": "code",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L88",
+      "_origin": "ast"
+    },
+    {
       "id": "e2e_storage_spec",
       "label": "storage.spec.js",
       "file_type": "code",
@@ -466,7 +554,7 @@
       "label": "readIdentity()",
       "file_type": "code",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L17",
+      "source_location": "L20",
       "_origin": "ast"
     },
     {
@@ -474,7 +562,7 @@
       "label": "NotFoundEntry()",
       "file_type": "code",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L29",
+      "source_location": "L32",
       "_origin": "ast",
       "community": 1
     },
@@ -483,7 +571,7 @@
       "label": "App()",
       "file_type": "code",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L60",
+      "source_location": "L63",
       "_origin": "ast",
       "community": 1
     },
@@ -583,6 +671,102 @@
       "file_type": "code",
       "source_file": "frontend/src/components/Avatar.jsx",
       "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard",
+      "label": "BlogCard.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_postshape",
+      "label": "postShape",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_sessionshape",
+      "label": "sessionShape",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_borders",
+      "label": "borders",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_postactions",
+      "label": "PostActions()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_blogcard",
+      "label": "BlogCard()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L80",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test",
+      "label": "BlogCard.test.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test_writer",
+      "label": "writer",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test_admin",
+      "label": "admin",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test_post",
+      "label": "post",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test_locationprobe",
+      "label": "LocationProbe()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_blogcard_test_mount",
+      "label": "mount()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L25",
       "_origin": "ast"
     },
     {
@@ -850,6 +1034,174 @@
       "_origin": "ast"
     },
     {
+      "id": "helpers_posts",
+      "label": "posts.js",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_readposts",
+      "label": "readPosts()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_validatepostinput",
+      "label": "validatePostInput()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_currentidentity",
+      "label": "currentIdentity()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_createpost",
+      "label": "createPost()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L58",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_updatepost",
+      "label": "updatePost()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L85",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_deletepost",
+      "label": "deletePost()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L109",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_datevalue",
+      "label": "dateValue()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L128",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_sortpostsnewest",
+      "label": "sortPostsNewest()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L138",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_formatpostdate",
+      "label": "formatPostDate()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L151",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_postexcerpt",
+      "label": "postExcerpt()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L164",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_mutationmessage",
+      "label": "mutationMessage()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L173",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test",
+      "label": "posts.test.js",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_writer",
+      "label": "writer",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_admin",
+      "label": "admin",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_input",
+      "label": "input",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_original",
+      "label": "original",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_other",
+      "label": "other",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_mutations",
+      "label": "mutations",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_seed",
+      "label": "seed()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "helpers_posts_test_storedposts",
+      "label": "storedPosts()",
+      "file_type": "code",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
       "id": "helpers_storage",
       "label": "storage.js",
       "file_type": "code",
@@ -1059,6 +1411,22 @@
       "community": 1
     },
     {
+      "id": "pages_home",
+      "label": "Home.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_home_home",
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
       "id": "pages_landingpage",
       "label": "LandingPage.jsx",
       "file_type": "code",
@@ -1235,6 +1603,102 @@
       "_origin": "ast"
     },
     {
+      "id": "pages_posts_test",
+      "label": "posts.test.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_writer",
+      "label": "writer",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_admin",
+      "label": "admin",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_post",
+      "label": "post",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_other",
+      "label": "other",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_seed",
+      "label": "seed()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_locationprobe",
+      "label": "LocationProbe()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_mount",
+      "label": "mount()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_filldraft",
+      "label": "fillDraft()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L49",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_posts_test_storedposts",
+      "label": "storedPosts()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L57",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_readblog",
+      "label": "ReadBlog.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_readblog_readblog",
+      "label": "ReadBlog()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
       "id": "pages_registerpage",
       "label": "RegisterPage.jsx",
       "file_type": "code",
@@ -1336,6 +1800,22 @@
       "file_type": "code",
       "source_file": "frontend/src/pages/RegisterPage.test.jsx",
       "source_location": "L59",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_writeblog",
+      "label": "WriteBlog.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "pages_writeblog_writeblog",
+      "label": "WriteBlog()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L17",
       "_origin": "ast"
     },
     {
@@ -1491,6 +1971,126 @@
       "confidence": "EXTRACTED",
       "source_file": "frontend/e2e/entry.spec.js",
       "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_captureruntimeerrors",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_readstorage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_opennavigation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_accountlink",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_register",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_logout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_signin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_fillpost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_expecttextsafe",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec",
+      "target": "e2e_posts_spec_addunrelatedposts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec_accountlink",
+      "target": "e2e_posts_spec_opennavigation",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec_logout",
+      "target": "e2e_posts_spec_opennavigation",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "e2e_posts_spec_logout",
+      "target": "e2e_posts_spec_readstorage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/e2e/posts.spec.js",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -1882,11 +2482,41 @@
     },
     {
       "source": "src_app",
+      "target": "pages_home",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "pages_readblog",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "pages_writeblog",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
       "target": "src_app_readidentity",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L17",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -1895,7 +2525,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L29",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -1904,7 +2534,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L60",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -1996,6 +2626,196 @@
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/Avatar.jsx",
       "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_avatar",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_auth",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_posts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_posts_deletepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "helpers_posts_postexcerpt",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_blogcard_postshape",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_blogcard_sessionshape",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_blogcard_borders",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_blogcard_postactions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_blogcard_blogcard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_postactions",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_test_writer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_test_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_test_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_test_locationprobe",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_test_mount",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -2653,6 +3473,427 @@
       "weight": 1.0
     },
     {
+      "source": "helpers_posts",
+      "target": "helpers_storage",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_storage_getposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_storage_getsession",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_storage_isvalidsession",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_storage_saveposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_auth",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_readposts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_validatepostinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_currentidentity",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_createpost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_updatepost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_deletepost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_datevalue",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_sortpostsnewest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L138",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L151",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_postexcerpt",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L164",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L173",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_createpost",
+      "target": "helpers_posts_validatepostinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_createpost",
+      "target": "helpers_posts_currentidentity",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_createpost",
+      "target": "helpers_posts_readposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_updatepost",
+      "target": "helpers_posts_validatepostinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_updatepost",
+      "target": "helpers_posts_currentidentity",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_updatepost",
+      "target": "helpers_posts_readposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_deletepost",
+      "target": "helpers_posts_currentidentity",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_deletepost",
+      "target": "helpers_posts_readposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_createpost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_deletepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_postexcerpt",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_readposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_sortpostsnewest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_updatepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_validatepostinput",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_writer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_input",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_original",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_other",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_mutations",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_seed",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_test",
+      "target": "helpers_posts_test_storedposts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.test.js",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
       "source": "helpers_storage",
       "target": "helpers_storage_hasstrings",
       "relation": "contains",
@@ -3070,6 +4311,75 @@
       "weight": 1.0
     },
     {
+      "source": "pages_home",
+      "target": "components_blogcard",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "components_blogcard_sessionshape",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "helpers_posts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "helpers_posts_readposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "helpers_posts_sortpostsnewest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home",
+      "target": "pages_home_home",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
       "source": "pages_landingpage",
       "target": "helpers_storage",
       "relation": "imports_from",
@@ -3382,6 +4692,206 @@
       "weight": 1.0
     },
     {
+      "source": "pages_posts_test",
+      "target": "pages_home",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_readblog",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_writeblog",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_writer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_other",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_seed",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_locationprobe",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_mount",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_filldraft",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_posts_test_storedposts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "components_avatar",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "components_blogcard",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "components_blogcard_postactions",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "components_blogcard_sessionshape",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "helpers_posts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "helpers_posts_readposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "pages_readblog_readblog",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
       "source": "pages_registerpage",
       "target": "helpers_auth",
       "relation": "imports_from",
@@ -3581,6 +5091,115 @@
       "weight": 1.0
     },
     {
+      "source": "pages_writeblog",
+      "target": "components_formfield",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "components_blogcard",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "components_blogcard_sessionshape",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_auth",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_posts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_posts_createpost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_posts_readposts",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "helpers_posts_updatepost",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_writeblog",
+      "target": "pages_writeblog_writeblog",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
       "source": "vercel",
       "target": "vercel_rewrites",
       "relation": "contains",
@@ -3680,12 +5299,62 @@
       "weight": 1.0
     },
     {
+      "source": "src_app",
+      "target": "pages_home_home",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "pages_readblog_readblog",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "pages_writeblog_writeblog",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
       "source": "src_app_test",
       "target": "src_app_app",
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.test.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard",
+      "target": "components_avatar_avatar",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_test",
+      "target": "components_blogcard_blogcard",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/BlogCard.test.jsx",
       "source_location": "L6",
       "weight": 1.0
     },
@@ -3800,6 +5469,16 @@
       "weight": 1.0
     },
     {
+      "source": "pages_home",
+      "target": "components_blogcard_blogcard",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "pages_landingpage_test",
       "target": "pages_landingpage_landingpage",
       "relation": "imports",
@@ -3860,6 +5539,46 @@
       "weight": 1.0
     },
     {
+      "source": "pages_posts_test",
+      "target": "pages_home_home",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_readblog_readblog",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_posts_test",
+      "target": "pages_writeblog_writeblog",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/posts.test.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog",
+      "target": "components_avatar_avatar",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "pages_registerpage",
       "target": "components_authlayout_authlayout",
       "relation": "imports",
@@ -3900,13 +5619,23 @@
       "weight": 1.0
     },
     {
+      "source": "pages_writeblog",
+      "target": "components_formfield_formfield",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/WriteBlog.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "src_app_readidentity",
       "target": "helpers_storage_getsession",
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L19",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -3960,6 +5689,26 @@
       "weight": 1.0
     },
     {
+      "source": "helpers_posts_currentidentity",
+      "target": "helpers_storage_isvalidsession",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_currentidentity",
+      "target": "helpers_storage_getsession",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
       "source": "pages_landingpage_readlatest",
       "target": "helpers_storage_getposts",
       "relation": "calls",
@@ -3977,7 +5726,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/App.jsx",
-      "source_location": "L132",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_postactions",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_blogcard",
+      "target": "helpers_posts_postexcerpt",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
+      "source": "components_blogcard_blogcard",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/components/BlogCard.jsx",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -4091,6 +5873,94 @@
       "weight": 1.0
     },
     {
+      "source": "helpers_posts_readposts",
+      "target": "helpers_storage_getposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_createpost",
+      "target": "helpers_storage_saveposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_updatepost",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_updatepost",
+      "target": "helpers_storage_saveposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_deletepost",
+      "target": "helpers_auth_canmutatepost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
+      "source": "helpers_posts_deletepost",
+      "target": "helpers_storage_saveposts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/helpers/posts.js",
+      "source_location": "L119",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home_home",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_home_home",
+      "target": "helpers_posts_sortpostsnewest",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Home.jsx",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
       "source": "pages_landingpage_landingpage",
       "target": "helpers_storage_isvalidsession",
       "relation": "calls",
@@ -4124,6 +5994,28 @@
       "weight": 1.0
     },
     {
+      "source": "pages_readblog_readblog",
+      "target": "helpers_posts_mutationmessage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "pages_readblog_readblog",
+      "target": "helpers_posts_formatpostdate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/ReadBlog.jsx",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
       "source": "pages_registerpage_registerpage",
       "target": "helpers_storage_isvalidsession",
       "relation": "calls",
@@ -4147,10 +6039,10 @@
     }
   ],
   "metadata": {
-    "built_at": "2026-10-15T12:02:44.426237+00:00",
+    "built_at": "2026-10-15T12:17:27.022946+00:00",
     "version": "graph_update-v1",
     "codebase_root": "C:\\artifacts-v2\\T011GSU2iRpR9000115102607521133\\developer",
     "force": true,
-    "files_scanned": 32
+    "files_scanned": 41
   }
 }
