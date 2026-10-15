@@ -27,8 +27,7 @@ test('landing links and reload retain public discovery without changing browser 
   await expect(page.getByRole('link', { name: 'Start Reading' })).toHaveAttribute('href', '/login');
   await page.getByRole('link', { name: 'Start Reading' }).click();
   await expect(page).toHaveURL(/\/login$/);
-  // The later account slice owns login; only the destination and recovery are tested here.
-  await expect(page.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+  await expect(page.getByRole('form', { name: 'Login' })).toBeVisible();
   await page.getByRole('link', { name: 'Return to WriteSpace' }).click();
   await page.getByRole('link', { name: 'WriteSpace home' }).click();
   await expect(page).toHaveURL(/\/$/);

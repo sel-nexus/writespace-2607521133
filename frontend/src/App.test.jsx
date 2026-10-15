@@ -100,11 +100,11 @@ describe('WriteSpace public entry', () => {
     expect(setItem).not.toHaveBeenCalled();
   });
 
-  it.each(['/login', '/register'])('leaves unfinished public route %s as not-found without feature claims', (path) => {
+  it.each([['/login', 'Login'], ['/register', 'Register']])('renders the implemented auth route %s', (path, name) => {
     renderEntry(path);
     expect(screen.getByTestId('location')).toHaveTextContent(path);
-    expect(screen.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
-    expect(screen.queryByRole('form')).not.toBeInTheDocument();
+    expect(screen.getByRole('form', { name })).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'This page wandered off.' })).not.toBeInTheDocument();
   });
 });
 
@@ -112,7 +112,7 @@ describe('entry protection and session handling', () => {
   it.each([...postPaths, ...adminPaths])('redirects guests on known protected route %s to login', (path) => {
     renderEntry(path);
     expect(screen.getByTestId('location')).toHaveTextContent('/login');
-    expect(screen.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+    expect(screen.getByRole('form', { name: 'Login' })).toBeVisible();
   });
 
   it.each(['{broken', '{}', '{"role":"admin"}', JSON.stringify({ ...writer, role: 'owner' })])(

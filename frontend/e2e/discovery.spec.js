@@ -89,8 +89,8 @@ test('desktop discovery reloads the newest actual previews without persisting sa
   await attachPreflight(page, testInfo, 'desktop-populated');
   await latest.getByRole('link', { name: 'Saved thought 4' }).click();
   await expect(page).toHaveURL(/\/login$/);
-  // Login is deliberately not implemented yet; do not claim a successful auth flow.
-  await expect(page.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+  // Account entry is implemented; this discovery journey remains read-only.
+  await expect(page.getByRole('form', { name: 'Login' })).toBeVisible();
   await page.getByRole('link', { name: 'Return to WriteSpace' }).click();
   await page.reload();
   await expect(latest.getByRole('heading', { level: 3 })).toHaveText([
@@ -101,13 +101,13 @@ test('desktop discovery reloads the newest actual previews without persisting sa
 });
 
 for (const [label, expectedPath] of [['Start Reading', '/login'], ['Get Started Free', '/register']]) {
-  test(`guest CTA ${label} uses its correct destination without inventing an auth page`, async ({ page }) => {
+  test(`guest CTA ${label} reaches its implemented auth form without changing storage`, async ({ page }) => {
     const errors = captureRuntimeErrors(page);
     await page.goto('/');
     const before = await readBrowserData(page);
     await page.getByRole('link', { name: label, exact: true }).click();
     expect(new URL(page.url()).pathname).toBe(expectedPath);
-    await expect(page.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+    await expect(page.getByRole('form', { name: expectedPath === '/login' ? 'Login' : 'Register', exact: true })).toBeVisible();
     await page.getByRole('link', { name: 'Return to WriteSpace' }).click();
     await expect(page.getByRole('heading', { name: tagline })).toBeVisible();
     expect(await readBrowserData(page)).toEqual(before);
@@ -127,7 +127,7 @@ for (const [label, href, finalPath] of [
     await link.click();
     expect(new URL(page.url()).pathname).toBe(finalPath);
     if (label === 'Home') await expect(page.getByRole('heading', { name: tagline })).toBeVisible();
-    else await expect(page.getByRole('heading', { name: 'This page wandered off.' })).toBeVisible();
+    else await expect(page.getByRole('form', { name: finalPath === '/login' ? 'Login' : 'Register', exact: true })).toBeVisible();
     expect(await readBrowserData(page)).toEqual(before);
     expect(errors).toEqual([]);
   });

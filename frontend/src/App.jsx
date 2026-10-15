@@ -7,6 +7,8 @@ import PublicNavbar from './components/PublicNavbar.jsx';
 import Navbar from './components/Navbar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LandingPage from './pages/LandingPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 
 /**
  * Read the session without repairing corrupt or inaccessible storage.
@@ -50,9 +52,9 @@ function NotFoundEntry() {
 }
 
 /**
- * Resolve implemented discovery and guard known future destinations.
+ * Resolve discovery and account-entry routes, guarding known future destinations.
  * @returns {React.JSX.Element} Content inside the caller-owned router.
- * @note Future auth pages receive session and onAuthenticated(nextSession).
+ * @note Auth pages receive session and onAuthenticated(nextSession).
  * The callback accepts only a valid, already-persisted session; it does not write.
  */
 export default function App() {
@@ -139,6 +141,8 @@ export default function App() {
       )}
       <Routes>
         <Route path="/" element={<LandingPage session={session} />} />
+        <Route path="/login" element={<LoginPage session={session} onAuthenticated={onAuthenticated} />} />
+        <Route path="/register" element={<RegisterPage session={session} onAuthenticated={onAuthenticated} />} />
         {futurePostPaths.map((path) => (
           <Route
             key={path}
